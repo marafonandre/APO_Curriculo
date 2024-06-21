@@ -11,6 +11,8 @@ function changeContent(option) {
             document.getElementById("welcomeContent").style.display = "none";
             document.getElementById("tabProgress").style.display = "block";
             document.getElementById("nextBtn").style.display = "inline";
+            document.getElementById("previousBtn").style.display = "inline";
+            document.getElementById("previousBtn").disabled = true;
             updateHeader();
             showCurrentTab();
             break;
@@ -41,9 +43,9 @@ function nextTab() {
     }
 
     if (currentTab > 0) {
-        document.getElementById("previousBtn").style.display = "inline";
+        document.getElementById("previousBtn").disabled = false;
     } else {
-        document.getElementById("previousBtn").style.display = "none";
+        document.getElementById("previousBtn").disabled = true;
     }
 
     if (currentTab >= tabList.length - 1) {
@@ -63,7 +65,7 @@ function previousTab() {
     showCurrentTab();
 
     if (currentTab == 0) {
-        document.getElementById("previousBtn").style.display = "none";
+        document.getElementById("previousBtn").disabled = true;
     }
 
     updateHeader();
