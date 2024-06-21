@@ -4,10 +4,9 @@ class Education
     private $course;
     private $educationalInstitution;
     private $degree;
-    private $startMonth;
     private $startYear;
-    private $endMonth;
     private $endYear;
+    private $situation;
 
     public function setCourse($course)
     {
@@ -36,14 +35,6 @@ class Education
         return $this->degree;
     }
 
-    public function setStartMonth($startMonth)
-    {
-        $this->startMonth = $startMonth;
-    }
-    public function getStartMonth()
-    {
-        return $this->startMonth;
-    }
 
     public function setStartYear($startYear)
     {
@@ -54,15 +45,6 @@ class Education
         return $this->startYear;
     }
 
-    public function setEndMonth($endMonth)
-    {
-        $this->endMonth = $endMonth;
-    }
-    public function getEndMonth()
-    {
-        return $this->endMonth;
-    }
-
     public function setEndYear($endYear)
     {
         $this->endYear = $endYear;
@@ -70,6 +52,15 @@ class Education
     public function getEndYear()
     {
         return $this->endYear;
+    }
+    
+    public function setSituation($situation)
+    {
+        $this->$situation = $$situation;
+    }
+    public function getSituation()
+    {
+        return $this->$situation;
     }
 }
 ?>

@@ -6,6 +6,7 @@ class ProfessionalExperience {
     private $startYear;
     private $endMonth;
     private $endYear;
+    private $stillWorking;
     private $responsibilities;
     
     public function getCompanyName() {
@@ -58,6 +59,14 @@ class ProfessionalExperience {
     public function getEndYear()
     {
         return $this->endYear;
+    }
+    
+    public function setStillWorking($stillWorking) {
+        $this->stillWorking = $stillWorking;
+    }
+    public function getStillWorking()
+    {
+        return $this->stillWorking;
     }
     
     public function setResponsibilities($responsibilities) {
