@@ -1,6 +1,7 @@
 {
     "livePreviewUseDevServer": false,
     "livePreviewServerProjectPath": "/",
-    "livePreviewHotReloadSupported": false,
-    "livePreviewFramework": "Custom"
+    "livePreviewHotReloadSupported": true,
+    "livePreviewFramework": "Docusaurus",
+    "livePreviewServerURL": "http://localhost/APO_Curriculo"
 }

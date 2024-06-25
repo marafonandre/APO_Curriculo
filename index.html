@@ -50,14 +50,18 @@
                     </button>
                 </div>
 
-                <form id="dataForm" action="">
+                <form
+                    class="needs-validation"
+                    id="dataForm"
+                    action=""
+                    novalidate>
                     <!-- Circles which indicates the steps of the form: -->
                     <div class="text-center" id="tabProgress">
                         <button
                             type="button"
                             class="btn btn-secondary float-start"
                             id="previousBtn"
-                            onclick="previousTab()">
+                            onclick="changeTab(-1)">
                             Anterior
                         </button>
 
@@ -71,12 +75,12 @@
                             type="button"
                             class="btn btn-success float-end"
                             id="nextBtn"
-                            onclick="nextTab()">
+                            onclick="changeTab(1)">
                             Próximo
                         </button>
                     </div>
 
-                    <div class="tab" style="margin-top: 2rem">
+                    <div class="tab" style="margin-top: 2rem" novalidate>
                         <div class="row form-group justify-content-center">
                             <div class="col-6">
                                 <label for="inputName">Nome</label>
@@ -84,7 +88,8 @@
                                     type="name"
                                     class="form-control"
                                     id="inputName"
-                                    placeholder="Seu nome completo." />
+                                    placeholder="Seu nome completo."
+                                    required />
                             </div>
                             <div class="col-2">
                                 <label for="inputAge">Idade</label>
@@ -92,22 +97,22 @@
                                     type="number"
                                     class="form-control"
                                     id="inputAge"
-                                    placeholder="00" />
+                                    placeholder="00"
+                                    required />
                             </div>
                         </div>
                         <div
                             class="row form-group justify-content-center"
                             style="margin-top: 1rem">
                             <div class="col-5">
-                                <label for="inputEmail"
-                                    >Endereço de email</label
-                                >
+                                <label for="inputEmail">Email</label>
                                 <input
                                     type="email"
                                     class="form-control"
                                     id="inputEmail"
                                     aria-describedby="emailHelp"
-                                    placeholder="example@email.com" />
+                                    placeholder="example@email.com"
+                                    required />
                                 <small
                                     id="emailHelp"
                                     class="form-text text-muted"
@@ -121,7 +126,8 @@
                                     type="number"
                                     class="form-control"
                                     id="inputPhone"
-                                    placeholder="(XX) XXXXX-XXXX" />
+                                    placeholder="(XX) XXXXX-XXXX"
+                                    required />
                             </div>
                         </div>
                         <div
@@ -133,7 +139,8 @@
                                     type="text"
                                     class="form-control"
                                     id="inputCity"
-                                    placeholder="Cidade" />
+                                    placeholder="Cidade"
+                                    required />
                             </div>
                             <div class="col-3">
                                 <label for="inputState">Estado</label>
@@ -141,8 +148,11 @@
                                     type="checkbox"
                                     class="form-select"
                                     id="inputState"
-                                    placeholder="XX">
-                                    <option selected>Selecionar</option>
+                                    placeholder="XX"
+                                    required>
+                                    <option value="" selected>
+                                        Selecionar
+                                    </option>
                                     <option value="AC">Acre</option>
                                     <option value="AL">Alagoas</option>
                                     <option value="AP">Amapá</option>
@@ -188,7 +198,9 @@
                         </div>
                     </div>
 
-                    <div class="tab" style="margin-top: 2rem">
+                    <div
+                        class="tab"
+                        style="margin-top: 2rem; text-align: center">
                         <div class="row form-group justify-content-center">
                             <div class="col-8">
                                 <h5 aria-describedby="softSkillsHelp">
@@ -204,45 +216,34 @@
                                 >
                             </div>
                         </div>
-                        <div
-                            class="row form-group justify-content-center"
-                            style="margin-top: 1rem">
-                            <ul class="list-group col-7" id="softSkillList">
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col align-self-center">
-                                            <span>Item 1</span>
-                                        </div>
-                                        <div class="col">
-                                            <button
-                                                type="button"
-                                                class="btn btn-close float-end"
-                                                id="hardSkillRemoveBtn"></button>
-                                        </div>
+
+                        <ul
+                            class="list-group col-7 shadow bg-body rounded text-start"
+                            style="margin-top: 1rem; display: inline-block"
+                            id="softSkillList">
+                            <li class="list-group-item">
+                                <div
+                                    class="row form-group justify-content-center"
+                                    style="margin-top: 1rem">
+                                    <div class="col-8">
+                                        <input
+                                            type="text"
+                                            class="form-control text-center"
+                                            placeholder="Digitar Soft Skill"
+                                            id="softSkillInp" />
                                     </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div
-                                        class="row form-group justify-content-center"
-                                        style="margin-top: 1rem">
-                                        <div class="col-8">
-                                            <input
-                                                type="text"
-                                                class="form-control text-center"
-                                                placeholder="Digitar Soft Skill"
-                                                id="softSkillInp" />
-                                        </div>
-                                        <div class="col-2">
-                                            <button
-                                                class="btn btn-success"
-                                                id="softSkillAddBtn">
-                                                Adicionar
-                                            </button>
-                                        </div>
+                                    <div class="col-2">
+                                        <button
+                                            type="button"
+                                            class="btn btn-success"
+                                            onclick="addSoftSkill()">
+                                            Adicionar
+                                        </button>
                                     </div>
-                                </li>
-                            </ul>
-                        </div>
+                                </div>
+                            </li>
+                        </ul>
+
                         <div
                             class="row form-group justify-content-center"
                             style="margin-top: 3rem">
@@ -260,50 +261,41 @@
                                 >
                             </div>
                         </div>
-                        <div
-                            class="row form-group justify-content-center"
-                            style="margin-top: 1rem">
-                            <ul class="list-group col-7" id="hardSkillList">
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="col align-self-center">
-                                            <span>Item 1</span>
-                                        </div>
-                                        <div class="col">
-                                            <button
-                                                type="button"
-                                                class="btn btn-close float-end"
-                                                id="hardSkillRemoveBtn"></button>
-                                        </div>
+
+                        <ul
+                            class="list-group col-7 shadow bg-body rounded text-start"
+                            style="margin-top: 1rem; display: inline-block"
+                            id="hardSkillList">
+                            <li class="list-group-item">
+                                <div
+                                    class="row form-group justify-content-center"
+                                    style="margin-top: 1rem">
+                                    <div class="col-8">
+                                        <input
+                                            type="text"
+                                            class="form-control text-center"
+                                            placeholder="Digitar Hard Skill"
+                                            id="hardSkillInp" />
                                     </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div
-                                        class="row form-group justify-content-center"
-                                        style="margin-top: 1rem">
-                                        <div class="col-8">
-                                            <input
-                                                type="text"
-                                                class="form-control text-center"
-                                                placeholder="Digitar Hard Skill"
-                                                id="hardSkillInp" />
-                                        </div>
-                                        <div class="col-2">
-                                            <button
-                                                class="btn btn-success"
-                                                id="hardSkillAddBtn">
-                                                Adicionar
-                                            </button>
-                                        </div>
+                                    <div class="col-2">
+                                        <button
+                                            type="button"
+                                            class="btn btn-success"
+                                            id="hardSkillAddBtn"
+                                            onclick="addHardSkill()">
+                                            Adicionar
+                                        </button>
                                     </div>
-                                </li>
-                            </ul>
-                        </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="tab" style="margin-top: 2rem">
-                        <div class="card">
-                            <div class="card-body">
+                        <ul
+                            class="list-group shadow bg-body rounded"
+                            id="professionalExperienceList">
+                            <li class="list-group-item">
                                 <div
                                     class="row form-group justify-content-center">
                                     <div class="col-5">
@@ -314,7 +306,8 @@
                                             type="text"
                                             class="form-control"
                                             id="inputCompany"
-                                            placeholder="Empresa que você trabalhou." />
+                                            placeholder="Empresa que você trabalhou."
+                                            required />
                                     </div>
                                     <div class="col-3">
                                         <label for="inputJob">Cargo</label>
@@ -322,7 +315,8 @@
                                             type="text"
                                             class="form-control"
                                             id="inputJob"
-                                            placeholder="Qual era o cargo?" />
+                                            placeholder="Qual era o cargo?"
+                                            required />
                                     </div>
                                 </div>
                                 <div
@@ -334,16 +328,21 @@
                                             type="number"
                                             class="form-control text-center"
                                             placeholder="00"
-                                            id="inputExpSM" />
+                                            id="inputExpSM"
+                                            max="31"
+                                            maxlength="2"
+                                            required />
                                     </div>
                                     <div class="col-2">
                                         <label for="inputExpSY">Ano</label>
                                         <input
                                             type="number"
                                             class="form-control text-center"
-                                            id="inputStartYear"
                                             placeholder="0000"
-                                            id="inputExpSY" />
+                                            id="inputExpSY"
+                                            min="1930"
+                                            maxlength="4"
+                                            required />
                                     </div>
                                     <div
                                         class="col-2 align-content-end text-center">
@@ -355,7 +354,10 @@
                                             type="number"
                                             class="form-control text-center"
                                             placeholder="00"
-                                            id="inputExpEM" />
+                                            id="inputExpEM"
+                                            max="31"
+                                            maxlength="2"
+                                            required />
                                     </div>
                                     <div class="col-2">
                                         <label for="inputExpEY">Ano</label>
@@ -363,7 +365,10 @@
                                             type="number"
                                             class="form-control text-center"
                                             id="inputExpEY"
-                                            placeholder="0000" />
+                                            placeholder="0000"
+                                            min="1930"
+                                            maxlength="4"
+                                            required />
                                     </div>
                                 </div>
                                 <div class="row form-group justify-content-end">
@@ -387,23 +392,12 @@
                                     style="margin-top: 1rem">
                                     <ul
                                         class="list-group col-7"
-                                        id="hardSkillList">
+                                        id="responsibilitiesList">
                                         <li class="list-group-item text-center">
-                                            <label>Ocupações na Empresa</label>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <div class="row">
-                                                <div
-                                                    class="col align-self-center">
-                                                    <span>Item 1</span>
-                                                </div>
-                                                <div class="col">
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-close float-end"
-                                                        id="hardSkillRemoveBtn"></button>
-                                                </div>
-                                            </div>
+                                            <label class="fw-bolder"
+                                                >Responsabilidades na
+                                                Empresa</label
+                                            >
                                         </li>
                                         <li class="list-group-item">
                                             <div
@@ -413,13 +407,15 @@
                                                     <input
                                                         type="text"
                                                         class="form-control text-center"
-                                                        placeholder="Digitar ocupação"
-                                                        id="hardSkillInp" />
+                                                        placeholder="Digitar Responsabilidade"
+                                                        id="responsibilitieInp" />
                                                 </div>
                                                 <div class="col-2">
                                                     <button
+                                                        type="button"
                                                         class="btn btn-success"
-                                                        id="hardSkillAddBtn">
+                                                        id="ocupationAddBtn"
+                                                        onclick="addResponsibilitie()">
                                                         Adicionar
                                                     </button>
                                                 </div>
@@ -431,17 +427,31 @@
                                     type="button"
                                     class="btn btn-success float-end"
                                     id="concludePEBtn"
-                                    onclick=""
+                                    onclick="addProfessionalExperience()"
                                     style="margin-top: 1rem">
-                                    Concluir experiência
+                                    Incluir experiência
                                 </button>
-                            </div>
-                        </div>
+                            </li>
+                            <li class="list-group-item">
+                                <h5 class="card-title">Cargo</h5>
+                                <button
+                                    type="button"
+                                    class="btn btn-close float-end"
+                                    onclick="removeListItem(this.parentNode)"></button>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    Nome da Empresa - Data de Entrada - Data de
+                                    Saída
+                                </h6>
+                                <span>- Ocupação 1</span>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="tab">
-                        <div class="card" style="margin-top: 2rem">
-                            <div class="card-body">
+                        <ul
+                            class="list-group shadow bg-body rounded"
+                            style="margin-top: 2rem">
+                            <li class="list-group-item">
                                 <div
                                     class="row form-group justify-content-center">
                                     <div class="col-5">
@@ -499,7 +509,9 @@
                                             class="form-select"
                                             name="courseSituation"
                                             id="inputCourseSituation">
-                                            <option selected>Selecionar</option>
+                                            <option value="" selected>
+                                                Selecionar
+                                            </option>
                                             <option value="ANDAMENTO">
                                                 Andamento
                                             </option>
@@ -521,10 +533,21 @@
                                     id="concludeEducationBtn"
                                     onclick=""
                                     style="margin-top: 1rem">
-                                    Concluir educação
+                                    Incluir educação
                                 </button>
-                            </div>
-                        </div>
+                            </li>
+                            <li class="list-group-item">
+                                <h5 class="card-title">Curso - Situação</h5>
+                                <button
+                                    type="button"
+                                    class="btn btn-close float-end"
+                                    onclick="removeListItem(this.parentNode)"></button>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    Nome da Instituição - Data de Entrada - Data de
+                                    Saída
+                                </h6>
+                            </li>
+                        </ul>
                     </div>
                     <div class="tab" style="margin-top: 3rem">
                         <div class="row">

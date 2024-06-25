@@ -63,4 +63,3 @@ class Education
         return $this->$situation;
     }
 }
-?>
