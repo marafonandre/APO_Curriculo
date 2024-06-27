@@ -55,7 +55,8 @@
                 <form
                     class="needs-validation"
                     id="dataForm"
-                    action=""
+                    action="data_process.php"
+                    method="post"
                     novalidate>
                     <!-- Circles which indicates the steps of the form: -->
                     <div class="text-center" id="tabProgress">
@@ -88,7 +89,7 @@
                         name="PersonalInformation"
                         novalidate>
                         <div class="row form-group justify-content-center">
-                            <div class="col-6">
+                            <div class="col-5">
                                 <label for="inputName">Nome</label>
                                 <input
                                     type="name"
@@ -98,14 +99,13 @@
                                     placeholder="Seu nome completo."
                                     required />
                             </div>
-                            <div class="col-2">
-                                <label for="inputAge">Idade</label>
+                            <div class="col-3">
+                                <label for="inputAge">Nascimento</label>
                                 <input
-                                    type="number"
+                                    type="date"
                                     class="form-control"
                                     name="age"
                                     id="inputAge"
-                                    placeholder="00"
                                     required />
                             </div>
                         </div>
@@ -212,8 +212,7 @@
 
                     <div
                         class="tab"
-                        style="margin-top: 2rem; text-align: center"
-                        name="Skills">
+                        style="margin-top: 2rem; text-align: center">
                         <div class="row form-group justify-content-center">
                             <div class="col-8">
                                 <h5 aria-describedby="softSkillsHelp">
@@ -447,28 +446,6 @@
                                     Incluir experiência
                                 </button>
                             </li>
-                            <li class="list-group-item">
-                                <button
-                                    type="button"
-                                    class="btn btn-close float-end"
-                                    onclick="removeListItem(this.parentNode)"></button>
-                                <h5 class="card-title">Cargo</h5>
-
-                                <h6 class="card-subtitle text-muted">
-                                    <span>Empresa </span>
-                                    <span>Data de Entrada</span>
-                                    <span>-</span>
-                                    <span>Data de Saída</span>
-                                </h6>
-
-                                <span>- Responsabilidade 1</span><br />
-                                <span>- Responsabilidade 2</span><br />
-                                <span>- Responsabilidade 3</span><br />
-                                <small class="text-muted">
-                                    *Exemplo que não será incluído na lista
-                                    final.</small
-                                >
-                            </li>
                         </ul>
                     </div>
 
@@ -486,18 +463,18 @@
                                         <input
                                             type="text"
                                             class="form-control"
-                                            name="$educationalInstitution"
                                             id="inputInstitution"
-                                            placeholder="Onde você estudou?" />
+                                            placeholder="Onde você estudou?"
+                                            required />
                                     </div>
                                     <div class="col-3">
                                         <label for="inputCourse">Curso</label>
                                         <input
                                             type="text"
                                             class="form-control"
-                                            name="course"
                                             id="inputCourse"
-                                            placeholder="Curso ou nível escolar." />
+                                            placeholder="Curso ou nível escolar."
+                                            required />
                                     </div>
                                 </div>
                                 <div
@@ -510,9 +487,9 @@
                                         <input
                                             type="number"
                                             class="form-control text-center"
-                                            name="startYear"
                                             id="inputEduSY"
-                                            placeholder="0000" />
+                                            placeholder="0000"
+                                            required />
                                     </div>
                                     <div
                                         class="col-1 align-content-end text-center">
@@ -525,9 +502,9 @@
                                         <input
                                             type="number"
                                             class="form-control text-center"
-                                            name="endYear"
                                             id="inputEduEY"
-                                            placeholder="0000" />
+                                            placeholder="0000"
+                                            required />
                                     </div>
                                     <div class="col-3">
                                         <label for="inputCourseSituation"
@@ -536,21 +513,21 @@
                                         <select
                                             type="checkbox"
                                             class="form-select"
-                                            name="situation"
-                                            id="inputCourseSituation">
+                                            id="inputCourseSituation"
+                                            required>
                                             <option value="" selected>
                                                 Selecionar
                                             </option>
-                                            <option value="ANDAMENTO">
+                                            <option value="Andamento">
                                                 Andamento
                                             </option>
-                                            <option value="TRANCADO">
+                                            <option value="Trancado">
                                                 Trancado
                                             </option>
-                                            <option value="INCOMPLETO">
+                                            <option value="Incompleto">
                                                 Incompleto
                                             </option>
-                                            <option value="COMPLETO">
+                                            <option value="Completo">
                                                 Completo
                                             </option>
                                         </select>
@@ -604,5 +581,6 @@
         </div>
 
         <script src="script.js"></script>
+        <script src="verification.js"></script>
     </body>
 </html>

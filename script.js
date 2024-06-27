@@ -3,6 +3,8 @@
 var currentTab = 0;
 var tabList = document.getElementsByClassName("tab");
 
+var mapOfLists = [];
+
 function changeContent(option) {
     switch (option) {
         case "new":
@@ -43,7 +45,13 @@ function showTab() {
 
 function changeTab(n) {
     if (n == 1) {
-        if (currentTab == 0 && !validateForm(tabList[currentTab])) return false;
+        if (currentTab == 0 && !validateForm(tabList[currentTab])) {
+            return false;
+        } else {
+            // If the valid status is true, mark the step as finished and valid:
+            document.getElementsByClassName("step")[currentTab].className +=
+                " finish";
+        }
 
         if (currentTab >= tabList.length - 1) {
             //...the form gets submitted:
@@ -83,6 +91,7 @@ function changeTab(n) {
             break;
     }
 
+    fixStepIndicator();
     showTab();
 }
 
@@ -122,6 +131,17 @@ function validateForm(form, button) {
     return true;
 }
 
+function fixStepIndicator(n) {
+    // This function removes the "active" class of all steps...
+    var i,
+        x = document.getElementsByClassName("step");
+    for (i = 0; i < x.length; i++) {
+        x[i].className = x[i].className.replace(" active", "");
+    }
+    //... and adds the "active" class to the current step:
+    x[currentTab].className += " active";
+}
+
 // ========== Gerenciamento das habilidades ==============
 function addSoftSkill() {
     if (document.getElementById("softSkillInp").value != "") {
@@ -137,7 +157,6 @@ function createSoftSkillListItem() {
     var span = document.createElement("span");
     var removeButton = document.createElement("button");
 
-    listItem.setAttribute("name", "softSkills[]");
     listItem.setAttribute(
         "value",
         document.getElementById("softSkillInp").value
@@ -148,6 +167,8 @@ function createSoftSkillListItem() {
     removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
 
     span.innerText = listItem.getAttribute("value");
+    span.setAttribute("name", "Skills[softSkills][]");
+    addToForm(span, listItem);
 
     listItem.appendChild(span);
     listItem.appendChild(removeButton);
@@ -169,7 +190,6 @@ function createHardSkillListItem() {
     var span = document.createElement("span");
     var removeButton = document.createElement("button");
 
-    listItem.setAttribute("name", "hardSkills[]");
     listItem.setAttribute(
         "value",
         document.getElementById("hardSkillInp").value
@@ -179,7 +199,9 @@ function createHardSkillListItem() {
     removeButton.setAttribute("class", "btn btn-close float-end");
     removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
 
+    span.setAttribute("name", "Skills[hardSkills][]");
     span.innerText = listItem.getAttribute("value");
+    addToForm(span, listItem);
 
     listItem.appendChild(span);
     listItem.appendChild(removeButton);
@@ -243,14 +265,21 @@ function createProfessionalExperienceListItem() {
     var jobTitle = document.createElement("h5");
     var removeButton = document.createElement("button");
     var h6 = document.createElement("h6");
+    var index =
+        document.getElementById("professionalExperienceList").children.length -
+        1;
 
     listItem.setAttribute("class", "list-group-item");
-    listItem.setAttribute("name", "experiences[]");
-    
+
     jobTitle.setAttribute("class", "card-title");
     jobTitle.innerText = document.getElementById("inputJob").value;
-    jobTitle.setAttribute("name", "jobTitle");
-    
+    jobTitle.setAttribute(
+        "name",
+        "ProfessionalExperience[" + index + "][jobTitle]"
+    );
+
+    addToForm(jobTitle, listItem);
+
     h6.setAttribute("class", "card-subtitle text-muted");
 
     removeButton.setAttribute("type", "button");
@@ -259,64 +288,122 @@ function createProfessionalExperienceListItem() {
 
     for (var i = 0; i < 5; i++) {
         var span = document.createElement("span");
+        var separator = document.createElement("span");
 
         switch (i) {
             case 0:
-                span.innerText =
-                    document.getElementById("inputCompany").value + " ";
-                span.setAttribute("name", "companyName");
+                span.innerText = document.getElementById("inputCompany").value;
+                span.setAttribute(
+                    "name",
+                    "ProfessionalExperience[" + index + "][companyName]"
+                );
+
+                separator.innerText = " ";
+
+                addToForm(span, listItem);
+
                 h6.appendChild(span);
+                h6.appendChild(separator);
                 break;
 
             case 1:
-                span.innerText =
-                    document.getElementById("inputExpSM").value + "/";
-                span.setAttribute("name", "startMonth");
+                span.innerText = document.getElementById("inputExpSM").value;
+                span.setAttribute(
+                    "name",
+                    "ProfessionalExperience[" + index + "][startMonth]"
+                );
+
+                separator.innerText = "/";
+
+                addToForm(span, listItem);
+
                 h6.appendChild(span);
+                h6.appendChild(separator);
                 break;
 
             case 2:
                 if (document.getElementById("stillWorkingCheckbox").checked) {
                     span.innerText =
-                        document.getElementById("inputExpSY").value +
-                        " - Atualmente";
-                    span.setAttribute("name", "startYear");
-                    i = 5;
+                        document.getElementById("inputExpSY").value;
+                    separator.innerText = " - Atualmente";
+                    span.setAttribute(
+                        "name",
+                        "ProfessionalExperience[" + index + "][startYear]"
+                    );
                 } else {
                     span.innerText =
-                        document.getElementById("inputExpSY").value + " - ";
-                    span.setAttribute("name", "startYear");
+                        document.getElementById("inputExpSY").value;
+                    span.setAttribute(
+                        "name",
+                        "ProfessionalExperience[" + index + "][startYear]"
+                    );
+
+                    separator.innerText = " - ";
                 }
+
+                addToForm(span, listItem);
+
                 h6.appendChild(span);
+                h6.appendChild(separator);
                 break;
 
             case 3:
-                span.innerText =
-                    document.getElementById("inputExpEM").value + "/";
-                span.setAttribute("name", "endMonth");
-                h6.appendChild(span);
+                span.setAttribute(
+                    "name",
+                    "ProfessionalExperience[" + index + "][endMonth]"
+                );
+
+                if (!document.getElementById("stillWorkingCheckbox").checked) {
+                    span.innerText =
+                        document.getElementById("inputExpEM").value;
+
+                    separator.innerText = "/";
+
+                    h6.appendChild(span);
+                    h6.appendChild(separator);
+                } else {
+                    span.innerText = "";
+                    h6.appendChild(span);
+                }
+
+                addToForm(span, listItem);
                 break;
 
             case 4:
-                span.innerText = document.getElementById("inputExpEY").value;
-                span.setAttribute("name", "endYear");
+                span.setAttribute(
+                    "name",
+                    "ProfessionalExperience[" + index + "][endYear]"
+                );
+
+                if (!document.getElementById("stillWorkingCheckbox").checked) {
+                    span.innerText =
+                        document.getElementById("inputExpEY").value;
+                } else {
+                    span.innerText = "";
+                }
+
+                addToForm(span, listItem);
                 h6.appendChild(span);
                 break;
         }
     }
-   
+
     listItem.appendChild(removeButton);
     listItem.appendChild(jobTitle);
     listItem.appendChild(h6);
 
     var resposibilities = document.getElementsByClassName("responsibilitie");
 
-    for (var i = 0; i < resposibilities.length; i++) {
+    for (var n = 0; n < resposibilities.length; n++) {
         var spanResponsibilitie = document.createElement("span");
 
         spanResponsibilitie.innerText =
-            " - " + resposibilities[i].getAttribute("value");
-        spanResponsibilitie.setAttribute("name", "resposibilities[]");
+            " - " + resposibilities[n].getAttribute("value");
+        spanResponsibilitie.setAttribute(
+            "name",
+            "ProfessionalExperience[" + index + "][responsibilities][]"
+        );
+        addToForm(spanResponsibilitie, listItem);
 
         listItem.appendChild(spanResponsibilitie);
         listItem.appendChild(document.createElement("br"));
@@ -373,91 +460,91 @@ function addEducation() {
             });
 
         document.getElementById("inputCourseSituation").value = "";
+        document.getElementById("inputCourseSituation").className =
+            "form-select";
     }
 }
 
 function createEducationListItem() {
     var listItem = document.createElement("li");
-    var courseAndSituation = document.createElement("h5");
-    var institutionNameAndPeriod = document.createElement("h6");
     var removeButton = document.createElement("button");
     var h6 = document.createElement("h6");
     var h5 = document.createElement("h5");
+    var index = document.getElementById("educationList").children.length - 1;
 
     listItem.setAttribute("class", "list-group-item");
-    listItem.setAttribute("name", "educations[]");
-    courseAndSituation.setAttribute("class", "card-title");
-    institutionNameAndPeriod.setAttribute(
-        "class",
-        "card-subtitle mb-2 text-muted"
-    );
+
+    h5.setAttribute("class", "card-title");
+    h6.setAttribute("class", "card-subtitle mb-2 text-muted");
+
     removeButton.setAttribute("type", "button");
     removeButton.setAttribute("class", "btn btn-close float-end");
     removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
 
-    courseAndSituation.innerText =
-        document.getElementById("inputCourse").value +
-        " - " +
-        document.getElementById("inputCourseSituation").value;
-
-    institutionNameAndPeriod.innerText =
-        document.getElementById("inputInstitution").value +
-        "  " +
-        document.getElementById("inputEduSY").value +
-        "-" +
-        document.getElementById("inputEduEY").value;
-
     for (var i = 0; i < 5; i++) {
         var span = document.createElement("span");
+        var separator = document.createElement("span");
 
         switch (i) {
             case 0:
-                span.innerText =
-                    document.getElementById("inputCompany").value + " ";
-                span.setAttribute("name", "companyName");
-                h6.appendChild(span);
+                span.innerText = document.getElementById("inputCourse").value;
+                separator.innerText = " - ";
+                span.setAttribute("name", "Education[" + index + "][course]");
+                h5.appendChild(span);
+                h5.appendChild(separator);
+                addToForm(span, listItem);
                 break;
 
             case 1:
-                span.innerText =
-                    document.getElementById("inputExpSM").value + "/";
-                span.setAttribute("name", "startMonth");
-                h6.appendChild(span);
+                span.innerText = document.getElementById(
+                    "inputCourseSituation"
+                ).value;
+                span.setAttribute(
+                    "name",
+                    "Education[" + index + "][situation]"
+                );
+                h5.appendChild(span);
+                addToForm(span, listItem);
                 break;
 
             case 2:
-                if (document.getElementById("stillWorkingCheckbox").checked) {
-                    span.innerText =
-                        document.getElementById("inputExpSY").value +
-                        " - Atualmente";
-                    span.setAttribute("name", "startYear");
-                    i = 5;
-                } else {
-                    span.innerText =
-                        document.getElementById("inputExpSY").value + " - ";
-                    span.setAttribute("name", "startYear");
-                }
+                span.innerText =
+                    document.getElementById("inputInstitution").value;
+                separator.innerText = " ";
+                span.setAttribute(
+                    "name",
+                    "Education[" + index + "][educationalInstitution]"
+                );
                 h6.appendChild(span);
+                h6.appendChild(separator);
+                addToForm(span, listItem);
                 break;
 
             case 3:
                 span.innerText =
-                    document.getElementById("inputExpEM").value + "/";
-                span.setAttribute("name", "endMonth");
+                    document.getElementById("inputEduSY").value + " - ";
+                separator.innerText = " - ";
+                span.setAttribute(
+                    "name",
+                    "Education[" + index + "][startYear]"
+                );
                 h6.appendChild(span);
+                h6.appendChild(separator);
+                addToForm(span, listItem);
                 break;
 
             case 4:
-                span.innerText = document.getElementById("inputExpEY").value;
-                span.setAttribute("name", "endYear");
+                span.innerText = document.getElementById("inputEduEY").value;
+                span.setAttribute("name", "Education[" + index + "][endYear]");
                 h6.appendChild(span);
+                addToForm(span, listItem);
                 break;
         }
     }
 
     listItem.appendChild(removeButton);
-    listItem.appendChild(courseAndSituation);
-    listItem.appendChild(institutionNameAndPeriod);
+    listItem.appendChild(h5);
+    listItem.appendChild(h6);
 
     return listItem;
 }
@@ -465,4 +552,15 @@ function createEducationListItem() {
 // ======== Remove qualquer item da sua lista Pai ========
 function removeListItem(li) {
     li.parentNode.removeChild(li);
+}
+
+// ========== cria ou remove um input escondido pra cada item que será enviado ==============
+function addToForm(span, li) {
+    var input = document.createElement("input");
+
+    input.setAttribute("name", span.getAttribute("name"));
+    input.style.display = "none";
+    input.value = span.innerText;
+
+    li.appendChild(input);
 }
