@@ -3,7 +3,6 @@ class Education
 {
     private $course;
     private $educationalInstitution;
-    private $degree;
     private $startYear;
     private $endYear;
     private $situation;
@@ -25,16 +24,6 @@ class Education
     {
         return $this->educationalInstitution;
     }
-
-    public function setDegree($degree)
-    {
-        $this->degree = $degree;
-    }
-    public function getDegree()
-    {
-        return $this->degree;
-    }
-
 
     public function setStartYear($startYear)
     {

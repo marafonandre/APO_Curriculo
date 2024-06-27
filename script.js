@@ -16,6 +16,7 @@ function changeContent(option) {
             break;
 
         case "home":
+            tabList[currentTab].style.display = "none";
             document.getElementById("tabProgress").style.display = "none";
             document.getElementById("previousBtn").style.display = "none";
             document.getElementById("nextBtn").style.display = "none";
@@ -118,7 +119,7 @@ function validateForm(form, button) {
             " finish";
     }
 
-    return valid;
+    return true;
 }
 
 // ========== Gerenciamento das habilidades ==============
@@ -190,7 +191,7 @@ function createHardSkillListItem() {
 
 document
     .getElementById("stillWorkingCheckbox")
-    .addEventListener("click", toggleStillWorking, false);
+    .addEventListener("change", toggleStillWorking, false);
 
 function toggleStillWorking() {
     if (document.getElementById("stillWorkingCheckbox").checked) {
@@ -214,50 +215,99 @@ function addProfessionalExperience() {
     if (!validateForm(document.getElementById("professionalExperienceList"))) {
         return false;
     } else {
-        document
-            .getElementById("professionalExperienceList")
-            .appendChild(createProfessionalExperienceListItem());
+        var form = document.getElementById("professionalExperienceList");
+        form.appendChild(createProfessionalExperienceListItem());
+        form.querySelectorAll("input").forEach((input) => {
+            if (input.required) {
+                input.className = "form-control";
+                input.value = "";
+            }
+
+            if (input.className == "form-check-input") {
+                input.checked = false;
+                toggleStillWorking();
+            }
+        });
+
+        form = document.getElementById("responsibilitiesList");
+        form.querySelectorAll("li").forEach((li) => {
+            if (li.className.includes("responsibilitie")) {
+                form.removeChild(li);
+            }
+        });
     }
 }
 
 function createProfessionalExperienceListItem() {
     var listItem = document.createElement("li");
     var jobTitle = document.createElement("h5");
-    var companyAndPeriod = document.createElement("h6");
     var removeButton = document.createElement("button");
+    var h6 = document.createElement("h6");
 
     listItem.setAttribute("class", "list-group-item");
+    listItem.setAttribute("name", "experiences[]");
+    
     jobTitle.setAttribute("class", "card-title");
-    companyAndPeriod.setAttribute("class", "card-subtitle mb-2 text-muted");
+    jobTitle.innerText = document.getElementById("inputJob").value;
+    jobTitle.setAttribute("name", "jobTitle");
+    
+    h6.setAttribute("class", "card-subtitle text-muted");
+
     removeButton.setAttribute("type", "button");
     removeButton.setAttribute("class", "btn btn-close float-end");
     removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
 
-    jobTitle.innerText = document.getElementById("inputJob").value;
-    if (document.getElementById("stillWorkingCheckbox").checked) {
-        companyAndPeriod.innerText =
-            document.getElementById("inputCompany").value +
-            " " +
-            document.getElementById("inputExpSM").value +
-            "/" +
-            document.getElementById("inputExpSY").value +
-            " - Atualmente";
-    } else {
-        companyAndPeriod.innerText =
-            document.getElementById("inputCompany").value +
-            " " +
-            document.getElementById("inputExpSM").value +
-            "/" +
-            document.getElementById("inputExpSY").value +
-            " - " +
-            document.getElementById("inputExpEM").value +
-            "/" +
-            document.getElementById("inputExpEY").value;
-    }
+    for (var i = 0; i < 5; i++) {
+        var span = document.createElement("span");
 
+        switch (i) {
+            case 0:
+                span.innerText =
+                    document.getElementById("inputCompany").value + " ";
+                span.setAttribute("name", "companyName");
+                h6.appendChild(span);
+                break;
+
+            case 1:
+                span.innerText =
+                    document.getElementById("inputExpSM").value + "/";
+                span.setAttribute("name", "startMonth");
+                h6.appendChild(span);
+                break;
+
+            case 2:
+                if (document.getElementById("stillWorkingCheckbox").checked) {
+                    span.innerText =
+                        document.getElementById("inputExpSY").value +
+                        " - Atualmente";
+                    span.setAttribute("name", "startYear");
+                    i = 5;
+                } else {
+                    span.innerText =
+                        document.getElementById("inputExpSY").value + " - ";
+                    span.setAttribute("name", "startYear");
+                }
+                h6.appendChild(span);
+                break;
+
+            case 3:
+                span.innerText =
+                    document.getElementById("inputExpEM").value + "/";
+                span.setAttribute("name", "endMonth");
+                h6.appendChild(span);
+                break;
+
+            case 4:
+                span.innerText = document.getElementById("inputExpEY").value;
+                span.setAttribute("name", "endYear");
+                h6.appendChild(span);
+                break;
+        }
+    }
+   
     listItem.appendChild(removeButton);
     listItem.appendChild(jobTitle);
-    listItem.appendChild(companyAndPeriod);
+    listItem.appendChild(h6);
 
     var resposibilities = document.getElementsByClassName("responsibilitie");
 
@@ -265,7 +315,8 @@ function createProfessionalExperienceListItem() {
         var spanResponsibilitie = document.createElement("span");
 
         spanResponsibilitie.innerText =
-            "- " + resposibilities[i].getAttribute("value");
+            " - " + resposibilities[i].getAttribute("value");
+        spanResponsibilitie.setAttribute("name", "resposibilities[]");
 
         listItem.appendChild(spanResponsibilitie);
         listItem.appendChild(document.createElement("br"));
@@ -288,7 +339,6 @@ function createResponsibilitieListItem() {
     var spanResponsibilitie = document.createElement("span");
     var removeButton = document.createElement("button");
 
-    listItem.setAttribute("name", "responsibilities[]");
     listItem.setAttribute(
         "value",
         document.getElementById("responsibilitieInp").value
@@ -305,67 +355,109 @@ function createResponsibilitieListItem() {
     return listItem;
 }
 
-// =========== Gerencia lista da educação =============== TODO
+// =========== Gerencia lista da educação ===============
 function addEducation() {
-    if (!validateForm(document.getElementById("professionalExperienceList"))) {
+    if (!validateForm(document.getElementById("educationList"))) {
         return false;
     } else {
         document
-            .getElementById("professionalExperienceList")
-            .appendChild(createProfessionalExperienceListItem());
+            .getElementById("educationList")
+            .appendChild(createEducationListItem());
+
+        document
+            .getElementById("educationList")
+            .querySelectorAll("input")
+            .forEach((input) => {
+                input.className = "form-control";
+                input.value = "";
+            });
+
+        document.getElementById("inputCourseSituation").value = "";
     }
 }
 
-function createProfessionalExperienceListItem() {
+function createEducationListItem() {
     var listItem = document.createElement("li");
-    var jobTitle = document.createElement("h5");
-    var companyAndPeriod = document.createElement("h6");
+    var courseAndSituation = document.createElement("h5");
+    var institutionNameAndPeriod = document.createElement("h6");
     var removeButton = document.createElement("button");
+    var h6 = document.createElement("h6");
+    var h5 = document.createElement("h5");
 
     listItem.setAttribute("class", "list-group-item");
-    jobTitle.setAttribute("class", "card-title");
-    companyAndPeriod.setAttribute("class", "card-subtitle mb-2 text-muted");
+    listItem.setAttribute("name", "educations[]");
+    courseAndSituation.setAttribute("class", "card-title");
+    institutionNameAndPeriod.setAttribute(
+        "class",
+        "card-subtitle mb-2 text-muted"
+    );
     removeButton.setAttribute("type", "button");
     removeButton.setAttribute("class", "btn btn-close float-end");
     removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
 
-    jobTitle.innerText = document.getElementById("inputJob").value;
-    if (document.getElementById("stillWorkingCheckbox").checked) {
-        companyAndPeriod.innerText =
-            document.getElementById("inputCompany").value +
-            " " +
-            document.getElementById("inputExpSM").value +
-            "/" +
-            document.getElementById("inputExpSY").value +
-            " - Atualmente";
-    } else {
-        companyAndPeriod.innerText =
-            document.getElementById("inputCompany").value +
-            " " +
-            document.getElementById("inputExpSM").value +
-            "/" +
-            document.getElementById("inputExpSY").value +
-            " - " +
-            document.getElementById("inputExpEM").value +
-            "/" +
-            document.getElementById("inputExpEY").value;
+    courseAndSituation.innerText =
+        document.getElementById("inputCourse").value +
+        " - " +
+        document.getElementById("inputCourseSituation").value;
+
+    institutionNameAndPeriod.innerText =
+        document.getElementById("inputInstitution").value +
+        "  " +
+        document.getElementById("inputEduSY").value +
+        "-" +
+        document.getElementById("inputEduEY").value;
+
+    for (var i = 0; i < 5; i++) {
+        var span = document.createElement("span");
+
+        switch (i) {
+            case 0:
+                span.innerText =
+                    document.getElementById("inputCompany").value + " ";
+                span.setAttribute("name", "companyName");
+                h6.appendChild(span);
+                break;
+
+            case 1:
+                span.innerText =
+                    document.getElementById("inputExpSM").value + "/";
+                span.setAttribute("name", "startMonth");
+                h6.appendChild(span);
+                break;
+
+            case 2:
+                if (document.getElementById("stillWorkingCheckbox").checked) {
+                    span.innerText =
+                        document.getElementById("inputExpSY").value +
+                        " - Atualmente";
+                    span.setAttribute("name", "startYear");
+                    i = 5;
+                } else {
+                    span.innerText =
+                        document.getElementById("inputExpSY").value + " - ";
+                    span.setAttribute("name", "startYear");
+                }
+                h6.appendChild(span);
+                break;
+
+            case 3:
+                span.innerText =
+                    document.getElementById("inputExpEM").value + "/";
+                span.setAttribute("name", "endMonth");
+                h6.appendChild(span);
+                break;
+
+            case 4:
+                span.innerText = document.getElementById("inputExpEY").value;
+                span.setAttribute("name", "endYear");
+                h6.appendChild(span);
+                break;
+        }
     }
 
     listItem.appendChild(removeButton);
-    listItem.appendChild(jobTitle);
-    listItem.appendChild(companyAndPeriod);
-
-    var resposibilities = document.getElementsByClassName("responsibilitie");
-
-    for (var i = 0; i < resposibilities.length; i++) {
-        var spanResponsibilitie = document.createElement("span");
-
-        spanResponsibilitie.innerText =
-            "- " + resposibilities[i].getAttribute("value");
-
-        listItem.appendChild(spanResponsibilitie);
-        listItem.appendChild(document.createElement("br"));
-    }
+    listItem.appendChild(courseAndSituation);
+    listItem.appendChild(institutionNameAndPeriod);
 
     return listItem;
 }
