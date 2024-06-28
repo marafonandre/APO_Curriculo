@@ -25,8 +25,7 @@ function changeContent(option) {
             document.getElementById("nextBtn").innerHTML = "Próximo";
             document.getElementById("welcomeContent").style.display = "block";
             document.getElementById("taskHeaderTitle").style.display = "none";
-            document.getElementById("welcomeHeaderTitle").style.display =
-                "block";
+            document.getElementById("welcomeHeaderTitle").style.display = "block";
             currentTab = -1;
             clearTabs();
             break;
@@ -43,19 +42,40 @@ function showTab() {
     }
 }
 
+document.getElementById("personalInformation").addEventListener(
+    "submit",
+    function (event) {
+        event.preventDefault();
+    },
+    false
+);
+
 function changeTab(n) {
     if (n == 1) {
         if (currentTab == 0 && !validateForm(tabList[currentTab])) {
             return false;
         } else {
             // If the valid status is true, mark the step as finished and valid:
-            document.getElementsByClassName("step")[currentTab].className +=
-                " finish";
+            document.getElementsByClassName("step")[currentTab].className += " finish";
         }
-
         if (currentTab >= tabList.length - 1) {
+            var data = {
+                personalInformation: {
+                    name: document.getElementById("inputName").value,
+                    age: getAgeFromDate(document.getElementById("inputAge").value),
+                    email: document.getElementById("inputEmail").value,
+                    phone: document.getElementById("inputPhone").value,
+                    city: document.getElementById("inputCity").value,
+                    state: document.getElementById("inputState").value,
+                    summary: document.getElementById("inputSummary").value
+                },
+                skills: skills,
+                professionalExperience: professionalExperiences,
+                education: educations
+            };
+
             //...the form gets submitted:
-            document.getElementById("dataForm").submit();
+            requestPost(data);
             return false;
         }
     }
@@ -65,28 +85,23 @@ function changeTab(n) {
 
     switch (currentTab) {
         case 0:
-            document.getElementById("welcomeHeaderTitle").style.display =
-                "none";
+            document.getElementById("welcomeHeaderTitle").style.display = "none";
             document.getElementById("taskHeaderTitle").style.display = "block";
-            document.getElementById("taskHeaderTitle").innerHTML =
-                "Informações Pessoais";
+            document.getElementById("taskHeaderTitle").innerHTML = "Informações Pessoais";
             document.getElementById("previousBtn").disabled = true;
             break;
         case 1:
-            document.getElementById("taskHeaderTitle").innerHTML =
-                "Habilidades";
+            document.getElementById("taskHeaderTitle").innerHTML = "Habilidades";
             document.getElementById("previousBtn").disabled = false;
             break;
         case 2:
-            document.getElementById("taskHeaderTitle").innerHTML =
-                "Experiências Profissionais";
+            document.getElementById("taskHeaderTitle").innerHTML = "Experiências Profissionais";
             break;
         case 3:
             document.getElementById("taskHeaderTitle").innerHTML = "Educação";
             break;
         case 4:
-            document.getElementById("taskHeaderTitle").innerHTML =
-                "Um breve resumo sobre você...";
+            document.getElementById("taskHeaderTitle").innerHTML = "Um breve resumo sobre você...";
             document.getElementById("nextBtn").innerHTML = "Concluir";
             break;
     }
@@ -124,8 +139,7 @@ function validateForm(form, button) {
     });
 
     if (valid) {
-        document.getElementsByClassName("step")[currentTab].className +=
-            " finish";
+        document.getElementsByClassName("step")[currentTab].className += " finish";
     }
 
     return true;
@@ -142,78 +156,80 @@ function fixStepIndicator(n) {
     x[currentTab].className += " active";
 }
 
+function getAgeFromDate(date) {
+    return 1;
+}
+
 // ========== Gerenciamento das habilidades ==============
+
+var skills = {
+    class: "Skills",
+    softSkills: [],
+    hardSkills: []
+};
+
 function addSoftSkill() {
     if (document.getElementById("softSkillInp").value != "") {
-        document
-            .getElementById("softSkillList")
-            .appendChild(createSoftSkillListItem());
+        var listItem = document.createElement("li");
+        skills.softSkills.push(document.getElementById("softSkillInp").value);
+        listItem.setAttribute("value", document.getElementById("softSkillInp").value);
+
+        listItem.setAttribute("class", "list-group-item");
+        listItem.innerHTML = `
+            <button
+                type="button"
+                class="btn btn-close float-end"
+                onclick="removeSoftSkill(this.parentNode)"></button>
+            <span>${document.getElementById("softSkillInp").value}<span/>
+        `;
+
+        document.getElementById("softSkillList").appendChild(listItem);
         document.getElementById("softSkillInp").value = "";
     }
 }
 
-function createSoftSkillListItem() {
-    var listItem = document.createElement("li");
-    var span = document.createElement("span");
-    var removeButton = document.createElement("button");
+function removeSoftSkill(li) {
+    var index = skills.softSkills.indexOf(li.getAttribute("value"));
 
-    listItem.setAttribute(
-        "value",
-        document.getElementById("softSkillInp").value
-    );
-    listItem.setAttribute("class", "list-group-item");
-    removeButton.setAttribute("type", "button");
-    removeButton.setAttribute("class", "btn btn-close float-end");
-    removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
+    skills.softSkills.splice(index, 1);
 
-    span.innerText = listItem.getAttribute("value");
-    span.setAttribute("name", "Skills[softSkills][]");
-    addToForm(span, listItem);
-
-    listItem.appendChild(span);
-    listItem.appendChild(removeButton);
-
-    return listItem;
+    li.remove();
 }
 
 function addHardSkill() {
     if (document.getElementById("hardSkillInp").value != "") {
-        document
-            .getElementById("hardSkillList")
-            .appendChild(createHardSkillListItem());
+        var listItem = document.createElement("li");
+        skills.hardSkills.push(document.getElementById("hardSkillInp").value);
+        listItem.setAttribute("value", document.getElementById("hardSkillInp").value);
+
+        listItem.setAttribute("class", "list-group-item");
+        listItem.innerHTML = `
+            <button
+                type="button"
+                class="btn btn-close float-end"
+                onclick="removeHardSkill(this.parentNode)"></button>
+            <span>${document.getElementById("hardSkillInp").value}<span/>
+        `;
+
+        document.getElementById("hardSkillList").appendChild(listItem);
         document.getElementById("hardSkillInp").value = "";
     }
 }
 
-function createHardSkillListItem() {
-    var listItem = document.createElement("li");
-    var span = document.createElement("span");
-    var removeButton = document.createElement("button");
+function removeHardSkill(li) {
+    var index = skills.hardSkills.indexOf(li.getAttribute("value"));
 
-    listItem.setAttribute(
-        "value",
-        document.getElementById("hardSkillInp").value
-    );
-    listItem.setAttribute("class", "list-group-item");
-    removeButton.setAttribute("type", "button");
-    removeButton.setAttribute("class", "btn btn-close float-end");
-    removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
+    skills.hardSkills.splice(index, 1);
 
-    span.setAttribute("name", "Skills[hardSkills][]");
-    span.innerText = listItem.getAttribute("value");
-    addToForm(span, listItem);
-
-    listItem.appendChild(span);
-    listItem.appendChild(removeButton);
-
-    return listItem;
+    li.remove();
 }
 
 // ============ Gerenciamento das experiências profissionais =================
 
-document
-    .getElementById("stillWorkingCheckbox")
-    .addEventListener("change", toggleStillWorking, false);
+var professionalExperiences = [];
+var responsibilities = [];
+
+document.getElementById("stillWorkingCheckbox").addEventListener("change", toggleStillWorking, false);
 
 function toggleStillWorking() {
     if (document.getElementById("stillWorkingCheckbox").checked) {
@@ -233,12 +249,100 @@ function toggleStillWorking() {
     }
 }
 
+function addResponsibilitie() {
+    if (document.getElementById("responsibilitieInp").value != "") {
+        var listItem = document.createElement("li");
+
+        responsibilities.push(document.getElementById("responsibilitieInp").value);
+
+        listItem.innerHTML = `
+            <button type="button" 
+                class="btn btn-close float-end" 
+                onclick="removeResponsibilitie(this.parentNode)"></button>
+            <span>${document.getElementById("responsibilitieInp").value}</span>
+        `;
+
+        listItem.setAttribute("class", "list-group-item responsibilitie");
+        listItem.setAttribute("value", document.getElementById("responsibilitieInp").value);
+
+        document.getElementById("responsibilitiesList").appendChild(listItem);
+        document.getElementById("responsibilitieInp").value = "";
+    }
+}
+
+function removeResponsibilitie(li) {
+    var index = responsibilities.indexOf(li.getAttribute("value"));
+
+    responsibilities.splice(index, 1);
+
+    li.remove();
+}
+
 function addProfessionalExperience() {
     if (!validateForm(document.getElementById("professionalExperienceList"))) {
         return false;
     } else {
         var form = document.getElementById("professionalExperienceList");
-        form.appendChild(createProfessionalExperienceListItem());
+        var li = document.createElement("li");
+        var professionalExperience = {
+            class: "ProfessionalExperience",
+            jobTitle: document.getElementById("inputJob").value,
+            companyName: document.getElementById("inputCompany").value,
+            startMonth: document.getElementById("inputExpSM").value,
+            startYear: document.getElementById("inputExpSY").value,
+            endMonth: document.getElementById("inputExpEM").value,
+            endYear: document.getElementById("inputExpEY").value,
+            stillWorking: document.getElementById("stillWorkingCheckbox").checked,
+            responsibilities: responsibilities
+        };
+
+        professionalExperiences.push(professionalExperience);
+        li.setAttribute("class", "list-group-item");
+        li.setAttribute(
+            "value",
+            professionalExperience.jobTitle +
+            professionalExperience.companyName +
+            professionalExperience.startMonth +
+            professionalExperience.startYear
+        );
+
+        if (!document.getElementById("stillWorkingCheckbox").checked) {
+            li.innerHTML = `
+                <button
+                    type="button"
+                    class="btn btn-close float-end"
+                    onclick="removeProfessionalExperience(this.parentNode)"></button>
+                <h5 class="card-title">${professionalExperience.jobTitle}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    ${professionalExperience.companyName + " "} 
+                    ${professionalExperience.startMonth}/${professionalExperience.startYear} - 
+                    ${professionalExperience.endMonth}/${professionalExperience.endYear}
+                </h6>
+            `;
+        } else {
+            li.innerHTML = `
+                <button
+                    type="button"
+                    class="btn btn-close float-end"
+                    onclick="removeProfessionalExperience(this.parentNode)"></button>
+                <h5 class="card-title">${professionalExperience.jobTitle}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    ${professionalExperience.companyName + " "} 
+                    ${professionalExperience.startMonth}/${professionalExperience.startYear} - 
+                    Atualmente
+                </h6>
+            `;
+        }
+
+        professionalExperience.responsibilities.forEach((resp) => {
+            var span = document.createElement("span");
+            span.innerHTML = `- ${resp}<br/>`;
+
+            li.appendChild(span);
+        });
+
+        form.appendChild(li);
+
         form.querySelectorAll("input").forEach((input) => {
             if (input.required) {
                 input.className = "form-control";
@@ -253,204 +357,74 @@ function addProfessionalExperience() {
 
         form = document.getElementById("responsibilitiesList");
         form.querySelectorAll("li").forEach((li) => {
-            if (li.className.includes("responsibilitie")) {
-                form.removeChild(li);
-            }
+            li.remove();
         });
+
+        responsibilities = [];
     }
 }
 
-function createProfessionalExperienceListItem() {
-    var listItem = document.createElement("li");
-    var jobTitle = document.createElement("h5");
-    var removeButton = document.createElement("button");
-    var h6 = document.createElement("h6");
-    var index =
-        document.getElementById("professionalExperienceList").children.length -
-        1;
+function removeProfessionalExperience(li) {
+    var item, index;
 
-    listItem.setAttribute("class", "list-group-item");
-
-    jobTitle.setAttribute("class", "card-title");
-    jobTitle.innerText = document.getElementById("inputJob").value;
-    jobTitle.setAttribute(
-        "name",
-        "ProfessionalExperience[" + index + "][jobTitle]"
-    );
-
-    addToForm(jobTitle, listItem);
-
-    h6.setAttribute("class", "card-subtitle text-muted");
-
-    removeButton.setAttribute("type", "button");
-    removeButton.setAttribute("class", "btn btn-close float-end");
-    removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
-
-    for (var i = 0; i < 5; i++) {
-        var span = document.createElement("span");
-        var separator = document.createElement("span");
-
-        switch (i) {
-            case 0:
-                span.innerText = document.getElementById("inputCompany").value;
-                span.setAttribute(
-                    "name",
-                    "ProfessionalExperience[" + index + "][companyName]"
-                );
-
-                separator.innerText = " ";
-
-                addToForm(span, listItem);
-
-                h6.appendChild(span);
-                h6.appendChild(separator);
-                break;
-
-            case 1:
-                span.innerText = document.getElementById("inputExpSM").value;
-                span.setAttribute(
-                    "name",
-                    "ProfessionalExperience[" + index + "][startMonth]"
-                );
-
-                separator.innerText = "/";
-
-                addToForm(span, listItem);
-
-                h6.appendChild(span);
-                h6.appendChild(separator);
-                break;
-
-            case 2:
-                if (document.getElementById("stillWorkingCheckbox").checked) {
-                    span.innerText =
-                        document.getElementById("inputExpSY").value;
-                    separator.innerText = " - Atualmente";
-                    span.setAttribute(
-                        "name",
-                        "ProfessionalExperience[" + index + "][startYear]"
-                    );
-                } else {
-                    span.innerText =
-                        document.getElementById("inputExpSY").value;
-                    span.setAttribute(
-                        "name",
-                        "ProfessionalExperience[" + index + "][startYear]"
-                    );
-
-                    separator.innerText = " - ";
-                }
-
-                addToForm(span, listItem);
-
-                h6.appendChild(span);
-                h6.appendChild(separator);
-                break;
-
-            case 3:
-                span.setAttribute(
-                    "name",
-                    "ProfessionalExperience[" + index + "][endMonth]"
-                );
-
-                if (!document.getElementById("stillWorkingCheckbox").checked) {
-                    span.innerText =
-                        document.getElementById("inputExpEM").value;
-
-                    separator.innerText = "/";
-
-                    h6.appendChild(span);
-                    h6.appendChild(separator);
-                } else {
-                    span.innerText = "";
-                    h6.appendChild(span);
-                }
-
-                addToForm(span, listItem);
-                break;
-
-            case 4:
-                span.setAttribute(
-                    "name",
-                    "ProfessionalExperience[" + index + "][endYear]"
-                );
-
-                if (!document.getElementById("stillWorkingCheckbox").checked) {
-                    span.innerText =
-                        document.getElementById("inputExpEY").value;
-                } else {
-                    span.innerText = "";
-                }
-
-                addToForm(span, listItem);
-                h6.appendChild(span);
-                break;
+    professionalExperiences.forEach((professionalExperience) => {
+        if (
+            li.getAttribute("value") ==
+            professionalExperience.jobTitle +
+            professionalExperience.companyName +
+            professionalExperience.startMonth +
+            professionalExperience.startYear
+        ) {
+            item = professionalExperience;
         }
-    }
+    });
 
-    listItem.appendChild(removeButton);
-    listItem.appendChild(jobTitle);
-    listItem.appendChild(h6);
+    index = professionalExperiences.indexOf(item);
 
-    var resposibilities = document.getElementsByClassName("responsibilitie");
+    professionalExperiences.splice(index, 1);
 
-    for (var n = 0; n < resposibilities.length; n++) {
-        var spanResponsibilitie = document.createElement("span");
-
-        spanResponsibilitie.innerText =
-            " - " + resposibilities[n].getAttribute("value");
-        spanResponsibilitie.setAttribute(
-            "name",
-            "ProfessionalExperience[" + index + "][responsibilities][]"
-        );
-        addToForm(spanResponsibilitie, listItem);
-
-        listItem.appendChild(spanResponsibilitie);
-        listItem.appendChild(document.createElement("br"));
-    }
-
-    return listItem;
-}
-
-function addResponsibilitie() {
-    if (document.getElementById("responsibilitieInp").value != "") {
-        document
-            .getElementById("responsibilitiesList")
-            .appendChild(createResponsibilitieListItem());
-        document.getElementById("responsibilitieInp").value = "";
-    }
-}
-
-function createResponsibilitieListItem() {
-    var listItem = document.createElement("li");
-    var spanResponsibilitie = document.createElement("span");
-    var removeButton = document.createElement("button");
-
-    listItem.setAttribute(
-        "value",
-        document.getElementById("responsibilitieInp").value
-    );
-    listItem.setAttribute("class", "list-group-item responsibilitie");
-    spanResponsibilitie.innerText = listItem.getAttribute("value");
-    removeButton.setAttribute("type", "button");
-    removeButton.setAttribute("class", "btn btn-close float-end");
-    removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
-
-    listItem.appendChild(spanResponsibilitie);
-    listItem.appendChild(removeButton);
-
-    return listItem;
+    li.remove();
 }
 
 // =========== Gerencia lista da educação ===============
+
+var educations = [];
+
 function addEducation() {
     if (!validateForm(document.getElementById("educationList"))) {
         return false;
     } else {
-        document
-            .getElementById("educationList")
-            .appendChild(createEducationListItem());
+        var li = document.createElement("li");
+        li.setAttribute("class", "list-group-item");
 
+        var education = {
+            class: "Education",
+            course: document.getElementById("inputCourse").value,
+            educationalInstitution: document.getElementById("inputInstitution").value,
+            startYear: document.getElementById("inputEduSY").value,
+            endYear: document.getElementById("inputEduEY").value,
+            situation: document.getElementById("inputCourseSituation").value
+        };
+        educations.push(education);
+
+        li.setAttribute("value", education.course + education.educationalInstitution);
+        li.innerHTML = `
+                <button
+                    type="button"
+                    class="btn btn-close float-end"
+                    onclick="removeEducation(this.parentNode)"></button>
+                <h5 class="card-title">
+                    ${education.course + " - "}
+                    ${education.situation + " - "}
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    ${education.educationalInstitution + " "} 
+                    ${education.startYear} - ${education.endYear}
+                </h6>
+            `;
+
+        document
+            .getElementById("educationList").appendChild(li);
         document
             .getElementById("educationList")
             .querySelectorAll("input")
@@ -460,107 +434,60 @@ function addEducation() {
             });
 
         document.getElementById("inputCourseSituation").value = "";
-        document.getElementById("inputCourseSituation").className =
-            "form-select";
+        document.getElementById("inputCourseSituation").className = "form-select";
     }
 }
 
-function createEducationListItem() {
-    var listItem = document.createElement("li");
-    var removeButton = document.createElement("button");
-    var h6 = document.createElement("h6");
-    var h5 = document.createElement("h5");
-    var index = document.getElementById("educationList").children.length - 1;
+function removeEducation(li) {
+    var item, index;
 
-    listItem.setAttribute("class", "list-group-item");
-
-    h5.setAttribute("class", "card-title");
-    h6.setAttribute("class", "card-subtitle mb-2 text-muted");
-
-    removeButton.setAttribute("type", "button");
-    removeButton.setAttribute("class", "btn btn-close float-end");
-    removeButton.setAttribute("onclick", "removeListItem(this.parentNode)");
-
-    for (var i = 0; i < 5; i++) {
-        var span = document.createElement("span");
-        var separator = document.createElement("span");
-
-        switch (i) {
-            case 0:
-                span.innerText = document.getElementById("inputCourse").value;
-                separator.innerText = " - ";
-                span.setAttribute("name", "Education[" + index + "][course]");
-                h5.appendChild(span);
-                h5.appendChild(separator);
-                addToForm(span, listItem);
-                break;
-
-            case 1:
-                span.innerText = document.getElementById(
-                    "inputCourseSituation"
-                ).value;
-                span.setAttribute(
-                    "name",
-                    "Education[" + index + "][situation]"
-                );
-                h5.appendChild(span);
-                addToForm(span, listItem);
-                break;
-
-            case 2:
-                span.innerText =
-                    document.getElementById("inputInstitution").value;
-                separator.innerText = " ";
-                span.setAttribute(
-                    "name",
-                    "Education[" + index + "][educationalInstitution]"
-                );
-                h6.appendChild(span);
-                h6.appendChild(separator);
-                addToForm(span, listItem);
-                break;
-
-            case 3:
-                span.innerText =
-                    document.getElementById("inputEduSY").value + " - ";
-                separator.innerText = " - ";
-                span.setAttribute(
-                    "name",
-                    "Education[" + index + "][startYear]"
-                );
-                h6.appendChild(span);
-                h6.appendChild(separator);
-                addToForm(span, listItem);
-                break;
-
-            case 4:
-                span.innerText = document.getElementById("inputEduEY").value;
-                span.setAttribute("name", "Education[" + index + "][endYear]");
-                h6.appendChild(span);
-                addToForm(span, listItem);
-                break;
+    educations.forEach((education) => {
+        if (li.getAttribute("value") == education.course + education.educationalInstitution) {
+            item = education;
         }
-    }
+    });
 
-    listItem.appendChild(removeButton);
-    listItem.appendChild(h5);
-    listItem.appendChild(h6);
+    index = educations.indexOf(item);
 
-    return listItem;
+    educations.splice(index, 1);
+
+    li.remove();
+}
+
+function requestPost(data) {
+    const json = JSON.stringify(data);
+    console.log(json);
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
+        },
+        body: json
+    };
+
+    // URL para onde enviar a requisição POST
+    const url = "set_data.php";
+
+    fetch(url, requestOptions)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Erro na requisição: " + response.status);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("Dados recebidos:", data);
+            // Aqui você pode processar os dados recebidos do PHP
+        })
+        .catch((error) => {
+            console.error("Erro durante a requisição fetch:", error);
+            // Loga a resposta completa para depurar
+        });
 }
 
 // ======== Remove qualquer item da sua lista Pai ========
+
 function removeListItem(li) {
-    li.parentNode.removeChild(li);
-}
-
-// ========== cria ou remove um input escondido pra cada item que será enviado ==============
-function addToForm(span, li) {
-    var input = document.createElement("input");
-
-    input.setAttribute("name", span.getAttribute("name"));
-    input.style.display = "none";
-    input.value = span.innerText;
-
-    li.appendChild(input);
+    li.remove();
 }

@@ -1,5 +1,6 @@
 <?php
-class ProfessionalExperience {
+class ProfessionalExperience
+{
     private $companyName;
     private $jobTitle;
     private $startMonth;
@@ -8,23 +9,47 @@ class ProfessionalExperience {
     private $endYear;
     private $stillWorking;
     private $responsibilities;
-    
-    public function getCompanyName() {
+
+    public function __construct(
+        $companyName = null,
+        $jobTitle = null,
+        $startMonth = null,
+        $startYear = null,
+        $endMonth = null,
+        $endYear = null,
+        $stillWorking = null,
+        $responsibilities = null
+    ) {
+        $this->companyName = $companyName;
+        $this->jobTitle = $jobTitle;
+        $this->startMonth = $startMonth;
+        $this->startYear = $startYear;
+        $this->endMonth = $endMonth;
+        $this->endYear = $endYear;
+        $this->stillWorking = $stillWorking;
+        $this->responsibilities = $responsibilities;
+    }
+
+    public function getCompanyName()
+    {
         return $this->companyName;
     }
-    
-    public function setCompanyName($companyName) {
+
+    public function setCompanyName($companyName)
+    {
         $this->companyName = $companyName;
     }
-    
-    public function getJobTitle() {
+
+    public function getJobTitle()
+    {
         return $this->jobTitle;
     }
-    
-    public function setJobTitle($jobTitle) {
+
+    public function setJobTitle($jobTitle)
+    {
         $this->jobTitle = $jobTitle;
     }
-    
+
     public function setStartMonth($startMonth)
     {
         $this->startMonth = $startMonth;
@@ -60,35 +85,40 @@ class ProfessionalExperience {
     {
         return $this->endYear;
     }
-    
-    public function setStillWorking($stillWorking) {
+
+    public function setStillWorking($stillWorking)
+    {
         $this->stillWorking = $stillWorking;
     }
     public function getStillWorking()
     {
         return $this->stillWorking;
     }
-    
-    public function setResponsibilities($responsibilities) {
+
+    public function setResponsibilities($responsibilities)
+    {
         // Verifica se $responsibilities é um array antes de atribuir
         if (is_array($responsibilities)) {
             $this->responsibilities = $responsibilities;
         } else {
-            throw new InvalidArgumentException('Responsibilities deve ser um array.');
+            throw new InvalidArgumentException("Responsibilities deve ser um array.");
         }
     }
-    
-    public function getResponsibilities() {
+
+    public function getResponsibilities()
+    {
         return $this->responsibilities;
     }
-    
+
     // Adiciona uma responsabilidade ao array
-    public function addResponsibility($responsibility) {
+    public function addResponsibility($responsibility)
+    {
         $this->responsibilities[] = $responsibility;
     }
-    
+
     // Remove uma responsabilidade do array
-    public function removeResponsibility($index) {
+    public function removeResponsibility($index)
+    {
         if (isset($this->responsibilities[$index])) {
             unset($this->responsibilities[$index]);
             // Reindexa o array após a remoção

@@ -7,6 +7,20 @@ class Education
     private $endYear;
     private $situation;
 
+    public function __construct(
+        $course = null,
+        $educationalInstitution = null,
+        $startYear = null,
+        $endYear = null,
+        $situation = null
+    ) {
+        $this->course = $course;
+        $this->educationalInstitution = $educationalInstitution;
+        $this->startYear = $startYear;
+        $this->endYear = $endYear;
+        $this->situation = $situation;
+    }
+
     public function setCourse($course)
     {
         $this->course = $course;
@@ -42,13 +56,13 @@ class Education
     {
         return $this->endYear;
     }
-    
+
     public function setSituation($situation)
     {
         $this->$situation = $$situation;
     }
     public function getSituation()
     {
-        return $this->$situation;
+        return $this->situation;
     }
 }

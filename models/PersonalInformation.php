@@ -9,6 +9,24 @@ class PersonalInformation
     private $state;
     private $summary;
 
+    public function __construct(
+        $name = null,
+        $age = null,
+        $email = null,
+        $phone = null,
+        $city = null,
+        $state = null,
+        $summary = null
+    ) {
+        $this->name = $name;
+        $this->age = $age;
+        $this->email = $email;
+        $this->phone = $phone;
+        $this->city = $city;
+        $this->state = $state;
+        $this->summary = $summary;
+    }
+
     public function setName($name)
     {
         $this->name = $name;
@@ -62,7 +80,7 @@ class PersonalInformation
     {
         return $this->state;
     }
-    
+
     public function setSummary($summary)
     {
         $this->summary = $summary;

@@ -1,586 +1,334 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="styles.css" />
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous" />
-        <title>iCurriculum</title>
-    </head>
-    <body>
-        <nav class="navbar navbar-dark bg-dark">
-            <div class="container-lg">
-                <h3 class="btn navbar-brand" onclick="changeContent('home')">
-                    iCurriculum
-                </h3>
-                <ul class="nav justify-content-center">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
-                            Novo
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Salvos</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
 
-        <div
-            class="container-lg card"
-            style="margin-top: 2rem; margin-bottom: 2rem">
-            <div id="cardHeader" class="card-header">
-                <h1 id="welcomeHeaderTitle">Boas vindas!</h1>
-                <h2 id="taskHeaderTitle"></h2>
-            </div>
-            <div id="cardBody" class="card-body">
-                <div id="welcomeContent">
-                    <h2>Uma página pra criar currículos e pá...</h2>
-                    <p>
-                        Bem vindo meu caro colega. Se você quer preencher um
-                        currículo de forma prática e sem frufru, você está no
-                        lugar certo.
-                    </p>
-                    <button
-                        type="button"
-                        onclick="changeContent('new')"
-                        class="btn btn-success">
-                        Vamos lá!
-                    </button>
-                </div>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <title>iCurriculum</title>
+</head>
 
-                <form
-                    class="needs-validation"
-                    id="dataForm"
-                    action="data_process.php"
-                    method="post"
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-lg">
+            <h3 class="btn navbar-brand" onclick="changeContent('home')">iCurriculum</h3>
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#"> Novo </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Salvos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-lg card" style="margin-top: 2rem; margin-bottom: 2rem">
+        <div id="cardHeader" class="card-header">
+            <h1 id="welcomeHeaderTitle">Boas vindas!</h1>
+            <h2 id="taskHeaderTitle"></h2>
+        </div>
+        <div id="cardBody" class="card-body">
+            <div id="welcomeContent">
+                <h2>Uma página pra criar currículos e pá...</h2>
+                <p>
+                    Bem vindo meu caro colega. Se você quer preencher um currículo de forma prática e sem frufru,
+                    você está no lugar certo.
+                </p>
+                <button type="button" onclick="changeContent('new')" class="btn btn-success">Vamos lá!</button>
+            </div>
+
+            <!-- Circles which indicates the steps of the form: -->
+            <div class="text-center" id="tabProgress">
+                <button type="button" class="btn btn-secondary float-start" id="previousBtn" onclick="changeTab(-1)">
+                    Anterior
+                </button>
+
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+
+                <button type="button" class="btn btn-success float-end" id="nextBtn" onclick="changeTab(1)">
+                    Próximo
+                </button>
+            </div>
+
+            <div class="tab" style="margin-top: 2rem; margin-bottom: 2rem" name="PersonalInformation">
+                <form class="needs-validation" id="personalInformation" action="data_process.php" method="post"
                     novalidate>
-                    <!-- Circles which indicates the steps of the form: -->
-                    <div class="text-center" id="tabProgress">
-                        <button
-                            type="button"
-                            class="btn btn-secondary float-start"
-                            id="previousBtn"
-                            onclick="changeTab(-1)">
-                            Anterior
-                        </button>
-
-                        <span class="step"></span>
-                        <span class="step"></span>
-                        <span class="step"></span>
-                        <span class="step"></span>
-                        <span class="step"></span>
-
-                        <button
-                            type="button"
-                            class="btn btn-success float-end"
-                            id="nextBtn"
-                            onclick="changeTab(1)">
-                            Próximo
-                        </button>
-                    </div>
-
-                    <div
-                        class="tab"
-                        style="margin-top: 2rem; margin-bottom: 2rem"
-                        name="PersonalInformation"
-                        novalidate>
-                        <div class="row form-group justify-content-center">
-                            <div class="col-5">
-                                <label for="inputName">Nome</label>
-                                <input
-                                    type="name"
-                                    class="form-control"
-                                    name="name"
-                                    id="inputName"
-                                    placeholder="Seu nome completo."
-                                    required />
-                            </div>
-                            <div class="col-3">
-                                <label for="inputAge">Nascimento</label>
-                                <input
-                                    type="date"
-                                    class="form-control"
-                                    name="age"
-                                    id="inputAge"
-                                    required />
-                            </div>
+                    <div class="row form-group justify-content-center">
+                        <div class="col-5">
+                            <label for="inputName">Nome</label>
+                            <input type="name" class="form-control" name="name" id="inputName"
+                                placeholder="Seu nome completo." required />
                         </div>
-                        <div
-                            class="row form-group justify-content-center"
-                            style="margin-top: 1rem">
-                            <div class="col-5">
-                                <label for="inputEmail">Email</label>
-                                <input
-                                    type="email"
-                                    class="form-control"
-                                    name="email"
-                                    id="inputEmail"
-                                    aria-describedby="emailHelp"
-                                    placeholder="example@email.com"
-                                    required />
-                                <small
-                                    id="emailHelp"
-                                    class="form-text text-muted"
-                                    >Nunca vamos compartilhar seu email ou
-                                    telefone, com ninguém.</small
-                                >
-                            </div>
-                            <div class="col-3">
-                                <label for="inputPhone">Telefone</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    name="phone"
-                                    id="inputPhone"
-                                    placeholder="(XX) XXXXX-XXXX"
-                                    required />
-                            </div>
-                        </div>
-                        <div
-                            class="row form-group justify-content-center"
-                            style="margin-top: 1rem">
-                            <div class="col-5">
-                                <label for="inputCity">Cidade</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="city"
-                                    id="inputCity"
-                                    placeholder="Cidade"
-                                    required />
-                            </div>
-                            <div class="col-3">
-                                <label for="inputState">Estado</label>
-                                <select
-                                    type="checkbox"
-                                    class="form-select"
-                                    name="state"
-                                    id="inputState"
-                                    placeholder="XX"
-                                    required>
-                                    <option value="" selected>
-                                        Selecionar
-                                    </option>
-                                    <option value="AC">Acre</option>
-                                    <option value="AL">Alagoas</option>
-                                    <option value="AP">Amapá</option>
-                                    <option value="AM">Amazonas</option>
-                                    <option value="BA">Bahia</option>
-                                    <option value="CE">Ceará</option>
-                                    <option value="DF">Distrito Federal</option>
-                                    <option value="ES">Espírito Santo</option>
-                                    <option value="GO">Goiás</option>
-                                    <option value="MA">Maranhão</option>
-                                    <option value="MT">Mato Grosso</option>
-                                    <option value="MS">
-                                        Mato Grosso do Sul
-                                    </option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="PA">Pará</option>
-                                    <option value="PB">Paraíba</option>
-                                    <option value="PR">Paraná</option>
-                                    <option value="PE">Pernambuco</option>
-                                    <option value="PI">Piauí</option>
-                                    <option value="RJ">Rio de Janeiro</option>
-                                    <option value="RN">
-                                        Rio Grande do Norte
-                                    </option>
-                                    <option value="RS">
-                                        Rio Grande do Sul
-                                    </option>
-                                    <option value="RO">Rondônia</option>
-                                    <option value="RR">Roraima</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="SC">Santa Catarina</option>
-                                    <option value="SE">Sergipe</option>
-                                    <option value="TO">Tocantins</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div
-                            class="row form-group justify-content-center"
-                            style="margin-top: 1rem">
-                            <small class="form-text text-muted col-8">
-                                *Preencher as próximas etapas não é obrigatório.
-                            </small>
+                        <div class="col-3">
+                            <label for="inputAge">Nascimento</label>
+                            <input type="date" class="form-control" name="age" id="inputAge" required />
                         </div>
                     </div>
-
-                    <div
-                        class="tab"
-                        style="margin-top: 2rem; text-align: center">
-                        <div class="row form-group justify-content-center">
-                            <div class="col-8">
-                                <h5 aria-describedby="softSkillsHelp">
-                                    Soft Skills
-                                </h5>
-                                <small
-                                    id="softSkillsHelp"
-                                    class="form-text text-muted">
-                                    Habilidades inatas ou adquiridas ao longo da
-                                    vida. São, geralmente, relacionadas a
-                                    emoções, percepções ou traços da
-                                    personalidade.</small
-                                >
-                            </div>
+                    <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                        <div class="col-5">
+                            <label for="inputEmail">Email</label>
+                            <input type="email" class="form-control" name="email" id="inputEmail"
+                                aria-describedby="emailHelp" placeholder="example@email.com" required />
+                            <small id="emailHelp" class="form-text text-muted">Nunca vamos compartilhar seu email ou
+                                telefone, com ninguém.</small>
                         </div>
-
-                        <ul
-                            class="list-group col-7 shadow bg-body rounded text-start"
-                            style="margin-top: 1rem; display: inline-block"
-                            id="softSkillList">
-                            <li class="list-group-item">
-                                <div
-                                    class="row form-group justify-content-center"
-                                    style="margin-top: 1rem">
-                                    <div class="col-8">
-                                        <input
-                                            type="text"
-                                            class="form-control text-center"
-                                            placeholder="Digitar Soft Skill"
-                                            id="softSkillInp" />
-                                    </div>
-                                    <div class="col-2">
-                                        <button
-                                            type="button"
-                                            class="btn btn-success"
-                                            onclick="addSoftSkill()">
-                                            Adicionar
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-
-                        <div
-                            class="row form-group justify-content-center"
-                            style="margin-top: 3rem">
-                            <div class="col-8">
-                                <h5 aria-describedby="hardSkillsHelp">
-                                    Hard Skills
-                                </h5>
-                                <small
-                                    id="hardSkillsHelp"
-                                    class="form-text text-muted">
-                                    Habilidades e competências técnicas,
-                                    adquiridas com estudos, cursos, formação
-                                    acadêmica e experiência no trabalho, por
-                                    exemplo.</small
-                                >
-                            </div>
+                        <div class="col-3">
+                            <label for="inputPhone">Telefone</label>
+                            <input type="number" class="form-control" name="phone" id="inputPhone"
+                                placeholder="(XX) XXXXX-XXXX" required />
                         </div>
-
-                        <ul
-                            class="list-group col-7 shadow bg-body rounded text-start"
-                            style="margin-top: 1rem; display: inline-block"
-                            id="hardSkillList">
-                            <li class="list-group-item">
-                                <div
-                                    class="row form-group justify-content-center"
-                                    style="margin-top: 1rem">
-                                    <div class="col-8">
-                                        <input
-                                            type="text"
-                                            class="form-control text-center"
-                                            placeholder="Digitar Hard Skill"
-                                            id="hardSkillInp" />
-                                    </div>
-                                    <div class="col-2">
-                                        <button
-                                            type="button"
-                                            class="btn btn-success"
-                                            id="hardSkillAddBtn"
-                                            onclick="addHardSkill()">
-                                            Adicionar
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
-
-                    <div
-                        class="tab"
-                        style="margin-top: 2rem"
-                        name="ProfessionalExperience">
-                        <ul
-                            class="list-group shadow bg-body rounded"
-                            id="professionalExperienceList">
-                            <li class="list-group-item">
-                                <div
-                                    class="row form-group justify-content-center">
-                                    <div class="col-5">
-                                        <label for="inputCompany"
-                                            >Empresa</label
-                                        >
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="inputCompany"
-                                            placeholder="Empresa que você trabalhou."
-                                            required />
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="inputJob">Cargo</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="inputJob"
-                                            placeholder="Qual era o cargo?"
-                                            required />
-                                    </div>
-                                </div>
-                                <div
-                                    class="row form-group justify-content-center"
-                                    style="margin-top: 1rem">
-                                    <div class="col-1">
-                                        <label for="inputExpSM">Mês</label>
-                                        <input
-                                            type="number"
-                                            class="form-control text-center"
-                                            placeholder="00"
-                                            id="inputExpSM"
-                                            max="31"
-                                            maxlength="2"
-                                            required />
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="inputExpSY">Ano</label>
-                                        <input
-                                            type="number"
-                                            class="form-control text-center"
-                                            placeholder="0000"
-                                            id="inputExpSY"
-                                            min="1930"
-                                            maxlength="4"
-                                            required />
-                                    </div>
-                                    <div
-                                        class="col-2 align-content-end text-center">
-                                        <label class="text-center">até</label>
-                                    </div>
-                                    <div class="col-1">
-                                        <label for="inputExpEM">Mês</label>
-                                        <input
-                                            type="number"
-                                            class="form-control text-center"
-                                            placeholder="00"
-                                            id="inputExpEM"
-                                            max="31"
-                                            maxlength="2"
-                                            required />
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="inputExpEY">Ano</label>
-                                        <input
-                                            type="number"
-                                            class="form-control text-center"
-                                            id="inputExpEY"
-                                            placeholder="0000"
-                                            min="1930"
-                                            maxlength="4"
-                                            required />
-                                    </div>
-                                </div>
-                                <div class="row form-group justify-content-end">
-                                    <div
-                                        class="form-check col-4"
-                                        style="margin-right: 5rem">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            value=""
-                                            id="stillWorkingCheckbox" />
-                                        <label
-                                            class="form-check-label"
-                                            for="flexCheckDefault">
-                                            Continuo trabalhando.
-                                        </label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="row form-group justify-content-center"
-                                    style="margin-top: 1rem">
-                                    <ul
-                                        class="list-group col-7"
-                                        id="responsibilitiesList">
-                                        <li class="list-group-item text-center">
-                                            <label class="fw-bolder"
-                                                >Responsabilidades na
-                                                Empresa</label
-                                            >
-                                        </li>
-                                        <li class="list-group-item">
-                                            <div
-                                                class="row form-group justify-content-center"
-                                                style="margin-top: 1rem">
-                                                <div class="col-8">
-                                                    <input
-                                                        type="text"
-                                                        class="form-control text-center"
-                                                        placeholder="Digitar Responsabilidade"
-                                                        id="responsibilitieInp" />
-                                                </div>
-                                                <div class="col-2">
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-success"
-                                                        onclick="addResponsibilitie()">
-                                                        Adicionar
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <button
-                                    type="button"
-                                    class="btn btn-success float-end"
-                                    id="concludePEBtn"
-                                    onclick="addProfessionalExperience()"
-                                    style="margin-top: 1rem">
-                                    Incluir experiência
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="tab" style="margin-top: 2rem" name="Education">
-                        <ul
-                            class="list-group shadow bg-body rounded"
-                            id="educationList">
-                            <li class="list-group-item">
-                                <div
-                                    class="row form-group justify-content-center">
-                                    <div class="col-5">
-                                        <label for="inputInstitution"
-                                            >Instituição de Ensino</label
-                                        >
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="inputInstitution"
-                                            placeholder="Onde você estudou?"
-                                            required />
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="inputCourse">Curso</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="inputCourse"
-                                            placeholder="Curso ou nível escolar."
-                                            required />
-                                    </div>
-                                </div>
-                                <div
-                                    class="row form-group justify-content-center"
-                                    style="margin-top: 1rem">
-                                    <div class="col-2">
-                                        <label for="inputEduSY"
-                                            >Ano Inicial</label
-                                        >
-                                        <input
-                                            type="number"
-                                            class="form-control text-center"
-                                            id="inputEduSY"
-                                            placeholder="0000"
-                                            required />
-                                    </div>
-                                    <div
-                                        class="col-1 align-content-end text-center">
-                                        <label class="text-center">até</label>
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="inputEduEY"
-                                            >Ano Final</label
-                                        >
-                                        <input
-                                            type="number"
-                                            class="form-control text-center"
-                                            id="inputEduEY"
-                                            placeholder="0000"
-                                            required />
-                                    </div>
-                                    <div class="col-3">
-                                        <label for="inputCourseSituation"
-                                            >Situação</label
-                                        >
-                                        <select
-                                            type="checkbox"
-                                            class="form-select"
-                                            id="inputCourseSituation"
-                                            required>
-                                            <option value="" selected>
-                                                Selecionar
-                                            </option>
-                                            <option value="Andamento">
-                                                Andamento
-                                            </option>
-                                            <option value="Trancado">
-                                                Trancado
-                                            </option>
-                                            <option value="Incompleto">
-                                                Incompleto
-                                            </option>
-                                            <option value="Completo">
-                                                Completo
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <button
-                                    type="button"
-                                    class="btn btn-success float-end"
-                                    onclick="addEducation()"
-                                    style="margin-top: 1rem">
-                                    Incluir educação
-                                </button>
-                            </li>
-                            <li class="list-group-item">
-                                <button
-                                    type="button"
-                                    class="btn btn-close float-end"
-                                    onclick="removeListItem(this.parentNode)"></button>
-                                <h5 class="card-title">Curso - Situação</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    Nome da Instituição Data de Entrada - Data
-                                    de Saída
-                                </h6>
-                                <small class="text-muted">
-                                    *Exemplo que não será incluído na lista
-                                    final.</small
-                                >
-                            </li>
-                        </ul>
-                    </div>
-                    <div
-                        class="tab"
-                        style="margin-top: 2rem"
-                        name="PersonalInformation">
-                        <div class="row">
-                            <small class="form-text text-muted"
-                                >Caso queira escrever um parágrafo sobre você,
-                                seus objetivos ou qualquer coisa a mais que
-                                deseja que apareça no seu currículo, essa é a
-                                hora.
-                            </small>
+                    <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                        <div class="col-5">
+                            <label for="inputCity">Cidade</label>
+                            <input type="text" class="form-control" name="city" id="inputCity" placeholder="Cidade"
+                                required />
                         </div>
-                        <div class="row mb-3">
-                            <textarea
-                                name="summary"
-                                class="form-control"></textarea>
+                        <div class="col-3">
+                            <label for="inputState">Estado</label>
+                            <select type="checkbox" class="form-select" name="state" id="inputState" placeholder="XX"
+                                required>
+                                <option value="" selected>Selecionar</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                        <small class="form-text text-muted col-8">
+                            *Preencher as próximas etapas não é obrigatório.
+                        </small>
                     </div>
                 </form>
             </div>
-        </div>
 
-        <script src="script.js"></script>
-        <script src="verification.js"></script>
-    </body>
+            <div class="tab" style="margin-top: 2rem; text-align: center" name="Skills">
+                <div class="row form-group justify-content-center">
+                    <div class="col-8">
+                        <h5 aria-describedby="softSkillsHelp">Soft Skills</h5>
+                        <small id="softSkillsHelp" class="form-text text-muted">
+                            Habilidades inatas ou adquiridas ao longo da vida. São, geralmente, relacionadas a
+                            emoções, percepções ou traços da personalidade.</small>
+                    </div>
+                </div>
+
+                <ul class="list-group col-7 shadow bg-body rounded text-start"
+                    style="margin-top: 1rem; display: inline-block" id="softSkillList">
+                    <li class="list-group-item">
+                        <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                            <div class="col-8">
+                                <input type="text" class="form-control text-center" placeholder="Digitar Soft Skill"
+                                    id="softSkillInp" />
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-success" onclick="addSoftSkill()">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="row form-group justify-content-center" style="margin-top: 3rem">
+                    <div class="col-8">
+                        <h5 aria-describedby="hardSkillsHelp">Hard Skills</h5>
+                        <small id="hardSkillsHelp" class="form-text text-muted">
+                            Habilidades e competências técnicas, adquiridas com estudos, cursos, formação acadêmica
+                            e experiência no trabalho, por exemplo.</small>
+                    </div>
+                </div>
+
+                <ul class="list-group col-7 shadow bg-body rounded text-start"
+                    style="margin-top: 1rem; display: inline-block" id="hardSkillList">
+                    <li class="list-group-item">
+                        <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                            <div class="col-8">
+                                <input type="text" class="form-control text-center" placeholder="Digitar Hard Skill"
+                                    id="hardSkillInp" />
+                            </div>
+                            <div class="col-2">
+                                <button type="button" class="btn btn-success" id="hardSkillAddBtn"
+                                    onclick="addHardSkill()">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tab" style="margin-top: 2rem" name="ProfessionalExperience">
+                <ul class="list-group shadow bg-body rounded" id="professionalExperienceList">
+                    <li class="list-group-item">
+                        <div class="row form-group justify-content-center">
+                            <div class="col-5">
+                                <label for="inputCompany">Empresa</label>
+                                <input type="text" class="form-control" id="inputCompany"
+                                    placeholder="Empresa que você trabalhou." required />
+                            </div>
+                            <div class="col-3">
+                                <label for="inputJob">Cargo</label>
+                                <input type="text" class="form-control" id="inputJob" placeholder="Qual era o cargo?"
+                                    required />
+                            </div>
+                        </div>
+                        <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                            <div class="col-1">
+                                <label for="inputExpSM">Mês</label>
+                                <input type="number" class="form-control text-center" placeholder="00" id="inputExpSM"
+                                    max="31" maxlength="2" required />
+                            </div>
+                            <div class="col-2">
+                                <label for="inputExpSY">Ano</label>
+                                <input type="number" class="form-control text-center" placeholder="0000" id="inputExpSY"
+                                    min="1930" maxlength="4" required />
+                            </div>
+                            <div class="col-2 align-content-end text-center">
+                                <label class="text-center">até</label>
+                            </div>
+                            <div class="col-1">
+                                <label for="inputExpEM">Mês</label>
+                                <input type="number" class="form-control text-center" placeholder="00" id="inputExpEM"
+                                    max="31" maxlength="2" required />
+                            </div>
+                            <div class="col-2">
+                                <label for="inputExpEY">Ano</label>
+                                <input type="number" class="form-control text-center" id="inputExpEY" placeholder="0000"
+                                    min="1930" maxlength="4" required />
+                            </div>
+                        </div>
+                        <div class="row form-group justify-content-end">
+                            <div class="form-check col-4" style="margin-right: 5rem">
+                                <input class="form-check-input" type="checkbox" value="" id="stillWorkingCheckbox" />
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Continuo trabalhando.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                            <ul class="list-group col-7" id="responsibilitiesList">
+                                <li class="list-group-item text-center">
+                                    <label class="fw-bolder">Responsabilidades na Empresa</label>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                                        <div class="col-8">
+                                            <input type="text" class="form-control text-center"
+                                                placeholder="Digitar Responsabilidade" id="responsibilitieInp" />
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-success"
+                                                onclick="addResponsibilitie()">
+                                                Adicionar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-success float-end" id="concludePEBtn"
+                            onclick="addProfessionalExperience()" style="margin-top: 1rem">
+                            Incluir experiência
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tab" style="margin-top: 2rem" name="Education">
+                <ul class="list-group shadow bg-body rounded" id="educationList">
+                    <li class="list-group-item">
+                        <div class="row form-group justify-content-center">
+                            <div class="col-5">
+                                <label for="inputInstitution">Instituição de Ensino</label>
+                                <input type="text" class="form-control" id="inputInstitution"
+                                    placeholder="Onde você estudou?" required />
+                            </div>
+                            <div class="col-3">
+                                <label for="inputCourse">Curso</label>
+                                <input type="text" class="form-control" id="inputCourse"
+                                    placeholder="Curso ou nível escolar." required />
+                            </div>
+                        </div>
+                        <div class="row form-group justify-content-center" style="margin-top: 1rem">
+                            <div class="col-2">
+                                <label for="inputEduSY">Ano Inicial</label>
+                                <input type="number" class="form-control text-center" id="inputEduSY" placeholder="0000"
+                                    required />
+                            </div>
+                            <div class="col-1 align-content-end text-center">
+                                <label class="text-center">até</label>
+                            </div>
+                            <div class="col-2">
+                                <label for="inputEduEY">Ano Final</label>
+                                <input type="number" class="form-control text-center" id="inputEduEY" placeholder="0000"
+                                    required />
+                            </div>
+                            <div class="col-3">
+                                <label for="inputCourseSituation">Situação</label>
+                                <select type="checkbox" class="form-select" id="inputCourseSituation" required>
+                                    <option value="" selected>Selecionar</option>
+                                    <option value="Andamento">Andamento</option>
+                                    <option value="Trancado">Trancado</option>
+                                    <option value="Incompleto">Incompleto</option>
+                                    <option value="Completo">Completo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success float-end" onclick="addEducation()"
+                            style="margin-top: 1rem">
+                            Incluir educação
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tab" style="margin-top: 2rem" name="PersonalInformationSummary">
+                <div class="row">
+                    <small class="form-text text-muted">Caso queira escrever um parágrafo sobre você, seus objetivos ou
+                        qualquer coisa a mais que
+                        deseja que apareça no seu currículo, essa é a hora.
+                    </small>
+                </div>
+                <div class="row mb-3">
+                    <textarea name="summary" id="inputSummary" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="verification.js"></script>
+</body>
+
 </html>
