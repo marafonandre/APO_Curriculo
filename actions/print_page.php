@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo json_encode(["error" => "Erro ao decodificar JSON"]);
         exit();
     }
+    
     $html =
         '
         <nav class="navbar navbar-dark bg-dark">
