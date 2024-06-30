@@ -235,7 +235,7 @@ function resetListeners() {
     if (document.getElementById("load")) {
         document.getElementById("load").addEventListener("click", function () {
             document.getElementById("fileInput").click();
-        })
+        });
     }
     if (document.getElementById("fileInput")) {
         document.getElementById("fileInput").addEventListener("change", function (event) {
@@ -243,7 +243,7 @@ function resetListeners() {
 
             // Verifica se foi selecionado exatamente um arquivo
             if (files.length !== 1) {
-                alert('Por favor, selecione um único arquivo.');
+                alert("Por favor, selecione um único arquivo.");
                 return;
             }
 
@@ -257,12 +257,12 @@ function resetListeners() {
                     var json = JSON.parse(contents);
                     loadInputs(json);
                 } catch (e) {
-                    alert('Erro ao ler o arquivo JSON.');
+                    alert("Erro ao ler o arquivo JSON.");
                     console.error(e);
                 }
             };
 
-            reader.readAsText(file)
+            reader.readAsText(file);
         });
     }
 }
@@ -293,7 +293,7 @@ function loadInputs(curriculum) {
         `;
 
         document.getElementById("softSkillList").appendChild(listItem);
-    })
+    });
     curriculum.skills.hardSkills.forEach((hardSkill) => {
         var listItem = document.createElement("li");
         skills.hardSkills.push(hardSkill);
@@ -309,7 +309,7 @@ function loadInputs(curriculum) {
         `;
 
         document.getElementById("hardSkillList").appendChild(listItem);
-    })
+    });
 
     curriculum.professionalExperience.forEach((professionalExperience) => {
         var form = document.getElementById("professionalExperienceList");
@@ -320,12 +320,12 @@ function loadInputs(curriculum) {
         li.setAttribute(
             "value",
             professionalExperience.jobTitle +
-            professionalExperience.companyName +
-            professionalExperience.startMonth +
-            professionalExperience.startYear
+                professionalExperience.companyName +
+                professionalExperience.startMonth +
+                professionalExperience.startYear
         );
 
-        if (professionalExperience.stillWorking) {
+        if (!professionalExperience.stillWorking) {
             li.innerHTML = `
                 <button
                     type="button"
@@ -361,13 +361,13 @@ function loadInputs(curriculum) {
         });
 
         form.appendChild(li);
-    })
+    });
 
     curriculum.education.forEach((education) => {
         var li = document.createElement("li");
         li.setAttribute("class", "list-group-item");
 
-        educations.push(education)
+        educations.push(education);
         li.setAttribute("value", education.course + education.educationalInstitution);
         li.innerHTML = `
                 <button
@@ -385,7 +385,7 @@ function loadInputs(curriculum) {
             `;
 
         document.getElementById("educationList").appendChild(li);
-    })
+    });
 }
 
 // ========== Gerenciamento das habilidades ==============
@@ -525,9 +525,9 @@ function addProfessionalExperience() {
         li.setAttribute(
             "value",
             professionalExperience.jobTitle +
-            professionalExperience.companyName +
-            professionalExperience.startMonth +
-            professionalExperience.startYear
+                professionalExperience.companyName +
+                professionalExperience.startMonth +
+                professionalExperience.startYear
         );
 
         if (!document.getElementById("stillWorkingCheckbox").checked) {
@@ -597,9 +597,9 @@ function removeProfessionalExperience(li) {
         if (
             li.getAttribute("value") ==
             professionalExperience.jobTitle +
-            professionalExperience.companyName +
-            professionalExperience.startMonth +
-            professionalExperience.startYear
+                professionalExperience.companyName +
+                professionalExperience.startMonth +
+                professionalExperience.startYear
         ) {
             item = professionalExperience;
         }
