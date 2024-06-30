@@ -1,11 +1,22 @@
 // ------------------------ Tratamento da parte visual e envio de formulários --------------------------
 
 var currentTab = 0;
-var tabList = document.getElementsByClassName("tab");
+var tabList;
 
 var mapOfLists = [];
+var mainPage = document.body.innerHTML;
+
+var data = {};
+var json;
+
+resetListeners();
 
 function changeContent(option) {
+    document.body.innerHTML = mainPage;
+    resetListeners();
+    tabList = document.getElementsByClassName("tab");
+    clearAll();
+
     switch (option) {
         case "new":
             currentTab = 0;
@@ -18,16 +29,7 @@ function changeContent(option) {
             break;
 
         case "home":
-            tabList[currentTab].style.display = "none";
-            document.getElementById("tabProgress").style.display = "none";
-            document.getElementById("previousBtn").style.display = "none";
-            document.getElementById("nextBtn").style.display = "none";
-            document.getElementById("nextBtn").innerHTML = "Próximo";
-            document.getElementById("welcomeContent").style.display = "block";
-            document.getElementById("taskHeaderTitle").style.display = "none";
-            document.getElementById("welcomeHeaderTitle").style.display = "block";
             currentTab = -1;
-            clearTabs();
             break;
     }
 }
@@ -59,9 +61,10 @@ function changeTab(n) {
             document.getElementsByClassName("step")[currentTab].className += " finish";
         }
         if (currentTab >= tabList.length - 1) {
-            var data = {
+            data = {
                 personalInformation: {
                     name: document.getElementById("inputName").value,
+                    date: document.getElementById("inputAge").value,
                     age: getAgeFromDate(document.getElementById("inputAge").value),
                     email: document.getElementById("inputEmail").value,
                     phone: document.getElementById("inputPhone").value,
@@ -91,6 +94,7 @@ function changeTab(n) {
             document.getElementById("previousBtn").disabled = true;
             break;
         case 1:
+            getAgeFromDate(document.getElementById("inputAge").value);
             document.getElementById("taskHeaderTitle").innerHTML = "Habilidades";
             document.getElementById("previousBtn").disabled = false;
             break;
@@ -98,7 +102,7 @@ function changeTab(n) {
             document.getElementById("taskHeaderTitle").innerHTML = "Experiências Profissionais";
             break;
         case 3:
-            document.getElementById("taskHeaderTitle").innerHTML = "Educação";
+            document.getElementById("taskHeaderTitle").innerHTML = "Formação";
             break;
         case 4:
             document.getElementById("taskHeaderTitle").innerHTML = "Um breve resumo sobre você...";
@@ -110,9 +114,14 @@ function changeTab(n) {
     showTab();
 }
 
-function clearTabs() {
-    // TODO
-    console.log("limpando");
+function clearAll() {
+    skills = {
+        softSkills: [],
+        hardSkills: []
+    };
+    professionalExperiences = [];
+    responsibilities = [];
+    educations = [];
 }
 
 function validateForm(form, button) {
@@ -126,6 +135,10 @@ function validateForm(form, button) {
             valid = false;
         } else if (input.required) {
             input.className = "form-control is-valid";
+            if (input.type == "date" && new Date() <= new Date(input.value)) {
+                input.className = "form-control is-invalid";
+                valid = false;
+            }
         }
     });
 
@@ -142,7 +155,7 @@ function validateForm(form, button) {
         document.getElementsByClassName("step")[currentTab].className += " finish";
     }
 
-    return true;
+    return valid;
 }
 
 function fixStepIndicator(n) {
@@ -156,14 +169,228 @@ function fixStepIndicator(n) {
     x[currentTab].className += " active";
 }
 
-function getAgeFromDate(date) {
-    return 1;
+function getAgeFromDate(dateStr) {
+    // Converte a string da data de nascimento para um objeto Date
+    var date = new Date(dateStr);
+    var today = new Date();
+
+    // Calcula a diferença em milissegundos entre as datas
+    var diff = today - date;
+
+    // Converte a diferença de milissegundos para anos
+    var age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+
+    return age;
+}
+
+function formatPhoneNumber() {
+    var input = document.getElementById("inputPhone");
+    var num = input.value.replace(/\D/g, ""); // Remove tudo que não é dígito
+
+    // Aplica a formatação (99) 99999-9999
+    var formattedNum = "";
+
+    // Formatação para números com menos de 2 dígitos
+    if (num.length > 0) {
+        formattedNum = "(" + num.substring(0, 2);
+    }
+    if (num.length >= 2) {
+        formattedNum = "(" + num.substring(0, 2);
+    }
+    if (num.length > 2) {
+        formattedNum += ") " + num.substring(2, 7);
+    }
+    if (num.length > 7) {
+        formattedNum += "-" + num.substring(7, 11);
+    }
+
+    input.value = formattedNum;
+}
+
+function resetListeners() {
+    // Adiciona um evento de clique ao elemento pai, que contém o navbar
+    document.body.addEventListener("click", function (event) {
+        if (event.target.classList.contains("home")) {
+            changeContent("home");
+        }
+        if (event.target.classList.contains("new")) {
+            changeContent("new");
+        }
+        if (event.target.classList.contains("print")) {
+            print();
+        }
+    });
+    if (document.getElementsByClassName("downloadJSON").length > 0) {
+        document.getElementsByClassName("downloadJSON")[0].addEventListener("click", function () {
+            downloadJSON();
+        });
+    }
+
+    if (document.getElementById("stillWorkingCheckbox")) {
+        document.getElementById("stillWorkingCheckbox").addEventListener("change", toggleStillWorking, false);
+    }
+    if (document.getElementById("inputPhone")) {
+        document.getElementById("inputPhone").addEventListener("input", formatPhoneNumber);
+    }
+    if (document.getElementById("load")) {
+        document.getElementById("load").addEventListener("click", function () {
+            document.getElementById("fileInput").click();
+        })
+    }
+    if (document.getElementById("fileInput")) {
+        document.getElementById("fileInput").addEventListener("change", function (event) {
+            var files = event.target.files; // Obtém a lista de arquivos selecionados
+
+            // Verifica se foi selecionado exatamente um arquivo
+            if (files.length !== 1) {
+                alert('Por favor, selecione um único arquivo.');
+                return;
+            }
+
+            var file = files[0]; // Obtém o primeiro (e único) arquivo selecionado
+
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                var contents = event.target.result;
+                try {
+                    var json = JSON.parse(contents);
+                    loadInputs(json);
+                } catch (e) {
+                    alert('Erro ao ler o arquivo JSON.');
+                    console.error(e);
+                }
+            };
+
+            reader.readAsText(file)
+        });
+    }
+}
+
+function loadInputs(curriculum) {
+    changeContent("new");
+
+    document.getElementById("inputName").value = curriculum.personalInformation.name;
+    document.getElementById("inputAge").value = curriculum.personalInformation.date;
+    document.getElementById("inputEmail").value = curriculum.personalInformation.email;
+    document.getElementById("inputPhone").value = curriculum.personalInformation.phone;
+    document.getElementById("inputCity").value = curriculum.personalInformation.city;
+    document.getElementById("inputState").value = curriculum.personalInformation.state;
+    document.getElementById("inputSummary").value = curriculum.personalInformation.summary;
+
+    curriculum.skills.softSkills.forEach((softSkill) => {
+        var listItem = document.createElement("li");
+        skills.softSkills.push(softSkill);
+        listItem.setAttribute("value", softSkill);
+
+        listItem.setAttribute("class", "list-group-item");
+        listItem.innerHTML = `
+            <button
+                type="button"
+                class="btn btn-close float-end"
+                onclick="removeSoftSkill(this.parentNode)"></button>
+            <span>${softSkill}<span/>
+        `;
+
+        document.getElementById("softSkillList").appendChild(listItem);
+    })
+    curriculum.skills.hardSkills.forEach((hardSkill) => {
+        var listItem = document.createElement("li");
+        skills.hardSkills.push(hardSkill);
+        listItem.setAttribute("value", hardSkill);
+
+        listItem.setAttribute("class", "list-group-item");
+        listItem.innerHTML = `
+            <button
+                type="button"
+                class="btn btn-close float-end"
+                onclick="removeHardSkill(this.parentNode)"></button>
+            <span>${hardSkill}<span/>
+        `;
+
+        document.getElementById("hardSkillList").appendChild(listItem);
+    })
+
+    curriculum.professionalExperience.forEach((professionalExperience) => {
+        var form = document.getElementById("professionalExperienceList");
+        var li = document.createElement("li");
+
+        professionalExperiences.push(professionalExperience);
+        li.setAttribute("class", "list-group-item");
+        li.setAttribute(
+            "value",
+            professionalExperience.jobTitle +
+            professionalExperience.companyName +
+            professionalExperience.startMonth +
+            professionalExperience.startYear
+        );
+
+        if (professionalExperience.stillWorking) {
+            li.innerHTML = `
+                <button
+                    type="button"
+                    class="btn btn-close float-end"
+                    onclick="removeProfessionalExperience(this.parentNode)"></button>
+                <h5 class="card-title">${professionalExperience.jobTitle}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    ${professionalExperience.companyName + " "} 
+                    ${professionalExperience.startMonth}/${professionalExperience.startYear} - 
+                    ${professionalExperience.endMonth}/${professionalExperience.endYear}
+                </h6>
+            `;
+        } else {
+            li.innerHTML = `
+                <button
+                    type="button"
+                    class="btn btn-close float-end"
+                    onclick="removeProfessionalExperience(this.parentNode)"></button>
+                <h5 class="card-title">${professionalExperience.jobTitle}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    ${professionalExperience.companyName + " "} 
+                    ${professionalExperience.startMonth}/${professionalExperience.startYear} - 
+                    Atualmente
+                </h6>
+            `;
+        }
+
+        professionalExperience.responsibilities.forEach((resp) => {
+            var span = document.createElement("span");
+            span.innerHTML = `- ${resp}<br/>`;
+
+            li.appendChild(span);
+        });
+
+        form.appendChild(li);
+    })
+
+    curriculum.education.forEach((education) => {
+        var li = document.createElement("li");
+        li.setAttribute("class", "list-group-item");
+
+        educations.push(education)
+        li.setAttribute("value", education.course + education.educationalInstitution);
+        li.innerHTML = `
+                <button
+                    type="button"
+                    class="btn btn-close float-end"
+                    onclick="removeEducation(this.parentNode)"></button>
+                <h5 class="card-title">
+                    ${education.course + " - "}
+                    ${education.situation}
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    ${education.educationalInstitution + " "} 
+                    ${education.startYear} - ${education.endYear}
+                </h6>
+            `;
+
+        document.getElementById("educationList").appendChild(li);
+    })
 }
 
 // ========== Gerenciamento das habilidades ==============
 
 var skills = {
-    class: "Skills",
     softSkills: [],
     hardSkills: []
 };
@@ -229,8 +456,6 @@ function removeHardSkill(li) {
 var professionalExperiences = [];
 var responsibilities = [];
 
-document.getElementById("stillWorkingCheckbox").addEventListener("change", toggleStillWorking, false);
-
 function toggleStillWorking() {
     if (document.getElementById("stillWorkingCheckbox").checked) {
         document.getElementById("inputExpEM").disabled = true;
@@ -285,7 +510,6 @@ function addProfessionalExperience() {
         var form = document.getElementById("professionalExperienceList");
         var li = document.createElement("li");
         var professionalExperience = {
-            class: "ProfessionalExperience",
             jobTitle: document.getElementById("inputJob").value,
             companyName: document.getElementById("inputCompany").value,
             startMonth: document.getElementById("inputExpSM").value,
@@ -357,7 +581,9 @@ function addProfessionalExperience() {
 
         form = document.getElementById("responsibilitiesList");
         form.querySelectorAll("li").forEach((li) => {
-            li.remove();
+            if (li.className.includes("responsibilitie")) {
+                li.remove();
+            }
         });
 
         responsibilities = [];
@@ -398,7 +624,6 @@ function addEducation() {
         li.setAttribute("class", "list-group-item");
 
         var education = {
-            class: "Education",
             course: document.getElementById("inputCourse").value,
             educationalInstitution: document.getElementById("inputInstitution").value,
             startYear: document.getElementById("inputEduSY").value,
@@ -415,7 +640,7 @@ function addEducation() {
                     onclick="removeEducation(this.parentNode)"></button>
                 <h5 class="card-title">
                     ${education.course + " - "}
-                    ${education.situation + " - "}
+                    ${education.situation}
                 </h5>
                 <h6 class="card-subtitle mb-2 text-muted">
                     ${education.educationalInstitution + " "} 
@@ -423,8 +648,7 @@ function addEducation() {
                 </h6>
             `;
 
-        document
-            .getElementById("educationList").appendChild(li);
+        document.getElementById("educationList").appendChild(li);
         document
             .getElementById("educationList")
             .querySelectorAll("input")
@@ -456,34 +680,75 @@ function removeEducation(li) {
 
 function requestPost(data) {
     const json = JSON.stringify(data);
-    console.log(json);
     const requestOptions = {
         method: "POST",
         headers: {
-            'Accept': 'application/json',
             "Content-Type": "application/json"
         },
         body: json
     };
 
     // URL para onde enviar a requisição POST
-    const url = "set_data.php";
 
-    fetch(url, requestOptions)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Erro na requisição: " + response.status);
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log("Dados recebidos:", data);
-            // Aqui você pode processar os dados recebidos do PHP
+    fetch("./actions/print_page.php", requestOptions)
+        .then((response) => response.text())
+        .then((html) => {
+            document.body.innerHTML = html;
+            resetListeners();
         })
         .catch((error) => {
             console.error("Erro durante a requisição fetch:", error);
             // Loga a resposta completa para depurar
         });
+
+    /* fetch("./actions/set_data_and_get_json.php", requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao carregar os dados.');
+            }
+            return response.json(); // Converte a resposta para JSON
+        })
+        .then(data => {
+            console.log(data); // Dados recebidos em formato JSON
+            // Faça o que for necessário com os dados JSON recebidos
+        })
+        .catch(error => {
+            console.error("Erro durante a requisição fetch:", error);
+            // Loga a resposta completa para depurar
+        }); */
+}
+
+function print() {
+    // Cria um novo documento para a impressão
+    var printGuide = window.open("", "_blank");
+    printGuide.document.write('<!doctype html><html lang="pt-BR"><head><title>Imprimir Curriculum</title>');
+    // Inclui os estilos do Bootstrap na página de impressão
+    printGuide.document.write(
+        '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />'
+    );
+    printGuide.document.write('</head><body><div class="container" style="margin-top: 2rem; margin-bottom: 2 rem">');
+    printGuide.document.write(document.getElementById("curriculum").innerHTML);
+    printGuide.document.write("</div></body></html>");
+    // Chama o método de impressão na nova guia
+    printGuide.print();
+    printGuide.document.close();
+
+    printGuide.close();
+}
+
+function downloadJSON() {
+    var json = JSON.stringify(data);
+    var blob = new Blob([json], { type: "application/json" });
+
+    var link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "CurriculumVitae";
+
+    // Força o download do arquivo
+    link.click();
+
+    // Limpa a URL do objeto Blob após o download
+    URL.revokeObjectURL(link.href);
 }
 
 // ======== Remove qualquer item da sua lista Pai ========

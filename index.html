@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="pt-BR">
 
 <head>
     <meta charset="utf-8" />
@@ -12,19 +12,20 @@
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <div class="container-lg">
-            <h3 class="btn navbar-brand" onclick="changeContent('home')">iCurriculum</h3>
+            <h3 class="btn navbar-brand home">iCurriculum</h3>
             <ul class="nav justify-content-center">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#"> Novo </a>
+                    <a class="nav-link active home new" aria-current="page" href="#"> Novo </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Salvos</a>
+                    <a class="nav-link" id="load" href="#">Carregar</a>
                 </li>
             </ul>
         </div>
+        <input type="file" id="fileInput" accept=".json" style="display: none;">
     </nav>
 
-    <div class="container-lg card" style="margin-top: 2rem; margin-bottom: 2rem">
+    <div class="container card" style="margin-top: 2rem; margin-bottom: 2rem">
         <div id="cardHeader" class="card-header">
             <h1 id="welcomeHeaderTitle">Boas vindas!</h1>
             <h2 id="taskHeaderTitle"></h2>
@@ -62,7 +63,7 @@
                     <div class="row form-group justify-content-center">
                         <div class="col-5">
                             <label for="inputName">Nome</label>
-                            <input type="name" class="form-control" name="name" id="inputName"
+                            <input type="text" class="form-control" name="name" id="inputName"
                                 placeholder="Seu nome completo." required />
                         </div>
                         <div class="col-3">
@@ -80,7 +81,7 @@
                         </div>
                         <div class="col-3">
                             <label for="inputPhone">Telefone</label>
-                            <input type="number" class="form-control" name="phone" id="inputPhone"
+                            <input type="text" class="form-control" name="phone" id="inputPhone"
                                 placeholder="(XX) XXXXX-XXXX" required />
                         </div>
                     </div>
@@ -317,7 +318,8 @@
                 <div class="row">
                     <small class="form-text text-muted">Caso queira escrever um parágrafo sobre você, seus objetivos ou
                         qualquer coisa a mais que
-                        deseja que apareça no seu currículo, essa é a hora.
+                        deseja que apareça no seu currículo, essa é a hora (objetivo, área de atuação e tal... sua
+                        idade já vai aparecer no final).
                     </small>
                 </div>
                 <div class="row mb-3">
@@ -326,7 +328,6 @@
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
     <script src="verification.js"></script>
 </body>
